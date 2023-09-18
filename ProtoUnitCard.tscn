@@ -1,13 +1,12 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://BoardUI/resources/RussoFont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Icons/CardImage/panzerfaust.png" type="Texture" id=2]
-[ext_resource path="res://Icons/BranchIcon/icon_background.png" type="Texture" id=3]
+[ext_resource path="res://Icons/icon_background.png" type="Texture" id=3]
 [ext_resource path="res://Icons/BranchIcon/ground_vehicle_icon.png" type="Texture" id=4]
 [ext_resource path="res://Icons/BranchIcon/air_vehicle_icon.png" type="Texture" id=5]
 [ext_resource path="res://Icons/BranchIcon/infantry_icon.png" type="Texture" id=6]
 [ext_resource path="res://Icons/BranchIcon/banner_type.png" type="Texture" id=7]
-[ext_resource path="res://Icons/BranchIcon/bann.png" type="Texture" id=8]
 [ext_resource path="res://BoardUI/card.png" type="Texture" id=9]
 
 [sub_resource type="Shader" id=3]
@@ -121,8 +120,3 @@ texture = ExtResource( 3 )
 [node name="Sprite" type="Sprite" parent="bgIcon3"]
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 6 )
-
-[node name="BannerType" type="Sprite" parent="."]
-position = Vector2( 8, 40 )
-scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 8 )

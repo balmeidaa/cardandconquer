@@ -2,11 +2,7 @@
 
 [ext_resource path="res://Scripts/Gameboard/CellScript.gd" type="Script" id=1]
 [ext_resource path="res://BoardUI/gameboard/hex.png" type="Texture" id=2]
-
-[sub_resource type="NavigationPolygon" id=1]
-vertices = PoolVector2Array( 64, 0, 72, 0, 128, 32, 136, 40, 136, 112, 128, 120, 72, 152, 64, 152, 8, 120, 0, 112, 0, 40, 8, 32 )
-polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ) ]
-outlines = [ PoolVector2Array( 64, 0, 72, 0, 128, 32, 136, 40, 136, 112, 128, 120, 72, 152, 64, 152, 8, 120, 0, 112, 0, 40, 8, 32 ) ]
+[ext_resource path="res://BoardUI/resources/CellNavArea.tres" type="NavigationPolygon" id=3]
 
 [node name="Cell" type="Node2D"]
 script = ExtResource( 1 )
@@ -14,14 +10,14 @@ script = ExtResource( 1 )
 [node name="CellSprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
 
-[node name="ClickableArea" type="Area2D" parent="."]
-collision_mask = 0
+[node name="NavPolygon" type="NavigationPolygonInstance" parent="."]
+navpoly = ExtResource( 3 )
 
-[node name="CollisionArea" type="CollisionPolygon2D" parent="ClickableArea"]
-polygon = PoolVector2Array( -5, -75, 4, -75, 64, -42, 68, -33, 68, 35, 63, 43, 6, 77, -4, 77, -65, 41, -69, 36, -69, -34, -64, -42 )
+[node name="Area2D" type="Area2D" parent="."]
 
-[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="."]
-position = Vector2( -68, -75 )
-navpoly = SubResource( 1 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+visible = false
+scale = Vector2( 1.4, 1.4 )
+polygon = PoolVector2Array( 0, -54, 48, -27, 48, 27, 0, 55, -48, 27, -48, -27 )
 
-[connection signal="input_event" from="ClickableArea" to="." method="_on_ClickableArea_input_event"]
+[connection signal="input_event" from="Area2D" to="." method="_on_Area2D_input_event"]

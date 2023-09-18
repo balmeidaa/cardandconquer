@@ -1,14 +1,18 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://BoardUI/Hand.tscn" type="PackedScene" id=1]
 [ext_resource path="res://BoardUI/Camera2D.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/Gameboard/GameboardScript.gd" type="Script" id=3]
-[ext_resource path="res://Units/UnitTokenTemplate.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Units/TokenTemplate.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Util/Debugger.tscn" type="PackedScene" id=5]
+
+[sub_resource type="NavigationPolygon" id=1]
+vertices = PoolVector2Array( -594, -400, 1276, -235, 792, 104, -685, 585, 1196, 663 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 2, 4, 3 ) ]
+outlines = [ PoolVector2Array( -594, -400, -685, 585, 1196, 663, 792, 104, 1276, -235 ) ]
 
 [node name="Gameboard" type="Node2D"]
 script = ExtResource( 3 )
-
-[node name="Tween" type="Tween" parent="."]
 
 [node name="Hand" parent="." instance=ExtResource( 1 )]
 position = Vector2( 360, 232 )
@@ -17,11 +21,24 @@ position = Vector2( 360, 232 )
 autostart = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 45, -20 )
 current = true
+zoom = Vector2( 2.5, 2.5 )
 script = ExtResource( 2 )
 
+[node name="UICanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="Debugger" parent="Camera2D/UICanvasLayer" instance=ExtResource( 5 )]
+show_behind_parent = true
+margin_left = 4.0
+margin_top = 472.0
+margin_right = 492.0
+margin_bottom = 592.0
+
 [node name="UnitToken" parent="." instance=ExtResource( 4 )]
-position = Vector2( 379, 208 )
-z_index = 20
+position = Vector2( 64, 0 )
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="."]
+navpoly = SubResource( 1 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

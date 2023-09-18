@@ -1,10 +1,13 @@
 extends Node
 
 const cell_factory = preload("res://BoardUI/gameboard/Cell.tscn")
+const unit_f = preload("res://Units/UnitTokenTemplate.tscn")
 var map_size := Vector2()
 var grid = []
 var cell_size # TODO export this to sonme singleton
-
+func _ready():
+    set_up_grid(Vector2(5,3))
+ 
 
 func set_up_grid(size:Vector2):
     map_size = size
@@ -33,7 +36,7 @@ func get_screen_position(x : int, y : int) -> Vector2:
      var offsetX = 0
      var size = cell_size.y/2
      if (y%2)==0:
-        offsetX = size/1.2 # in theory it should size/2
+        offsetX = size/1.2# in theory it should size/2
      else:
         offsetX = 0
    

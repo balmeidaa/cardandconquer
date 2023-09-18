@@ -1,8 +1,0 @@
-card_id,name,description,cost,usable_by,image,targets_friendly,targets_enemy,area_of_effect,radius_of_aoe
-string,string,string,int,string,string,bool,bool,bool,int
-sprint,Sprint,,1,infantry,,TRUE,FALSE,FALSE,0
-take_cover,Take Cover,,,infantry,,TRUE,FALSE,FALSE,0
-smoke,Smoke,,,"infantry, vehicle_ground",,FALSE,FALSE,TRUE,5
-armored_advance,Armored Advance,,,vehicle_ground,,TRUE,FALSE,FALSE,0
-armored_retreat,Armored Retreat,,,vehicle_ground,,TRUE,FALSE,FALSE,0
-reinforcements,Reinforcements,,,,,FALSE,FALSE,TRUE,0

@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="Card&Conquer"
-run/main_scene="res://BoardUI/board.tscn"
+run/main_scene="res://BoardUI/Board.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+BoardEventHandler="*res://Scripts/Gameboard/BoardEventHandler.gd"
 
 [gui]
 
@@ -29,7 +33,12 @@ lmb={
 [layer_names]
 
 2d_physics/layer_1="Cell"
+2d_physics/layer_2="Units"
 2d_navigation/layer_1="ground"
+
+[navigation]
+
+2d/default_edge_connection_margin=20.0
 
 [physics]
 

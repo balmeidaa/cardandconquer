@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/icon_background.png-e83f09c636f85a28dfc79ff8f84613bf.stex"
+path="res://.import/icon_background.png-2d94316c813add9369db27bebc23dbb5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Icons/BranchIcon/icon_background.png"
-dest_files=[ "res://.import/icon_background.png-e83f09c636f85a28dfc79ff8f84613bf.stex" ]
+source_file="res://Icons/icon_background.png"
+dest_files=[ "res://.import/icon_background.png-2d94316c813add9369db27bebc23dbb5.stex" ]
 
 [params]
 

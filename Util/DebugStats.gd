@@ -44,7 +44,7 @@ var props = []  # An array of the tracked properties.
 
 func _ready():
     dynamic_font = DynamicFont.new()
-    dynamic_font.font_data = load("res://Fonts/Russo_One.ttf")
+    dynamic_font.font_data = load("res://Assets/Fonts/Russo_One.ttf")
     dynamic_font.size = 20
     dynamic_font.outline_size = 2
     dynamic_font.outline_color = Color( 0, 0, 0, 1 )

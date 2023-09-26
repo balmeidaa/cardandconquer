@@ -2,6 +2,8 @@ extends Node2D
 
 signal finished(next_state_name)
 
+var parent = null
+
 # Initialize the state. E.g. change the animation
 func enter():
     return
@@ -20,3 +22,7 @@ func _update(delta):
 
 func _on_animation_finished(anim_name):
     return
+
+func _set_up(reference):
+    parent = reference
+

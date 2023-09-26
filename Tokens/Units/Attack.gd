@@ -1,1 +1,5 @@
-extends "res://Scripts/StateMachine/State.gd"
+extends "res://Scripts/StateMachine/UnitState.gd"
+
+
+func _update(delta):
+   pass

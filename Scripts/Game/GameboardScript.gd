@@ -19,8 +19,7 @@ func _ready():
 #    var grid = grid_factory.instance()
 #    grid.set_up_grid(Vector2(5,5))
 #    add_child(grid)
-    debugger.add_property(self, "clic_pos", "")
-    debugger.add_property(unit, "path_points.points", "")
+    #debugger.add_property(self, "clic_pos", "")
     debugger.add_property(unit, "states_stack", "")
 
 

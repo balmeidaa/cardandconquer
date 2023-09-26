@@ -1,15 +1,18 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Tokens/Units/TokenScript.gd" type="Script" id=1]
 [ext_resource path="res://Tokens/TokenImage/battle-tank.png" type="Texture" id=2]
 [ext_resource path="res://Tokens/Units/Idle.gd" type="Script" id=3]
 [ext_resource path="res://Tokens/Units/Move.gd" type="Script" id=4]
 [ext_resource path="res://Tokens/Units/Attack.gd" type="Script" id=5]
-[ext_resource path="res://Tokens/Units/MoveAttack.gd" type="Script" id=6]
+[ext_resource path="res://Tokens/Units/UnitLogic.gd" type="Script" id=6]
 
 [sub_resource type="StreamTexture" id=1]
 flags = 4
 load_path = "res://.import/icon_background.png-d0bd0bd62b4df13bea67deb11e2b0018.stex"
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 207.022
 
 [node name="UnitToken" type="KinematicBody2D"]
 collision_layer = 2
@@ -41,18 +44,27 @@ target_desired_distance = 5.0
 path_max_distance = 10.0
 avoidance_enabled = true
 
-[node name="States" type="Node2D" parent="."]
+[node name="RangeFinder" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
 
-[node name="Idle" type="Node2D" parent="States"]
-script = ExtResource( 3 )
+[node name="CollisionShape" type="CollisionShape2D" parent="RangeFinder"]
+shape = SubResource( 2 )
 
-[node name="Move" type="Node2D" parent="States"]
-script = ExtResource( 4 )
-
-[node name="Attack" type="Node2D" parent="States"]
-script = ExtResource( 5 )
-
-[node name="MoveAttack" type="Node2D" parent="States"]
+[node name="UnitLogic" type="Node2D" parent="."]
 script = ExtResource( 6 )
 
+[node name="States" type="Node2D" parent="UnitLogic"]
+
+[node name="Idle" type="Node2D" parent="UnitLogic/States"]
+script = ExtResource( 3 )
+
+[node name="Move" type="Node2D" parent="UnitLogic/States"]
+script = ExtResource( 4 )
+
+[node name="Attack" type="Node2D" parent="UnitLogic/States"]
+script = ExtResource( 5 )
+
 [connection signal="target_reached" from="NavigationAgent" to="." method="_on_NavigationAgent_target_reached"]
+[connection signal="body_entered" from="RangeFinder" to="." method="_on_RangeFinder_body_entered"]
+[connection signal="body_exited" from="RangeFinder" to="." method="_on_RangeFinder_body_exited"]

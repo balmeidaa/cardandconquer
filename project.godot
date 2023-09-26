@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "StateMachine",
 "language": "GDScript",
 "path": "res://Scripts/StateMachine/StateMachine.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Token",
+"language": "GDScript",
+"path": "res://Tokens/Units/TokenScript.gd"
 } ]
 _global_script_class_icons={
-"StateMachine": ""
+"StateMachine": "",
+"Token": ""
 }
 
 [application]

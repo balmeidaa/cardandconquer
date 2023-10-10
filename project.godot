@@ -14,14 +14,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/StateMachine/StateMachine.gd"
 }, {
+"base": "StaticBody2D",
+"class": "StructureToken",
+"language": "GDScript",
+"path": "res://Tokens/Stuctures/StructureTemplate.gd"
+}, {
 "base": "KinematicBody2D",
-"class": "Token",
+"class": "UnitToken",
 "language": "GDScript",
 "path": "res://Tokens/Units/TokenScript.gd"
 } ]
 _global_script_class_icons={
 "StateMachine": "",
-"Token": ""
+"StructureToken": "",
+"UnitToken": ""
 }
 
 [application]
@@ -54,7 +60,9 @@ rmb={
 [layer_names]
 
 2d_physics/layer_1="Cell"
-2d_physics/layer_2="Units"
+2d_physics/layer_2="ground_unit"
+2d_physics/layer_3="air_unit"
+2d_physics/layer_4="structure"
 2d_navigation/layer_1="ground"
 
 [navigation]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Tokens/Units/TokenScript.gd" type="Script" id=1]
 [ext_resource path="res://Tokens/TokenImage/battle-tank.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Tokens/Units/Move.gd" type="Script" id=4]
 [ext_resource path="res://Tokens/Units/Attack.gd" type="Script" id=5]
 [ext_resource path="res://Tokens/Units/UnitLogic.gd" type="Script" id=6]
+[ext_resource path="res://VFX/ShotVFX.tscn" type="PackedScene" id=7]
 
 [sub_resource type="StreamTexture" id=1]
 flags = 4
@@ -16,8 +17,15 @@ radius = 207.022
 
 [node name="UnitToken" type="KinematicBody2D"]
 collision_layer = 2
-collision_mask = 0
+collision_mask = 10
 script = ExtResource( 1 )
+
+[node name="FireRay" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 200, 0 )
+collision_mask = 2
+
+[node name="ShotVFX" parent="." instance=ExtResource( 7 )]
 
 [node name="PathPoints" type="Line2D" parent="."]
 z_index = 70
@@ -25,7 +33,7 @@ width = 20.0
 default_color = Color( 0.176471, 0.811765, 0.709804, 0.623529 )
 joint_mode = 1
 
-[node name="CollisionPolygon" type="CollisionPolygon2D" parent="."]
+[node name="HurtBox" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( 0, -77, 69, -39, 70, 38, 0, 77, -69, 39, -70, -38 )
 disabled = true
 
@@ -65,6 +73,9 @@ script = ExtResource( 4 )
 [node name="Attack" type="Node2D" parent="UnitLogic/States"]
 script = ExtResource( 5 )
 
+[node name="ROFTimer" type="Timer" parent="."]
+
 [connection signal="target_reached" from="NavigationAgent" to="." method="_on_NavigationAgent_target_reached"]
 [connection signal="body_entered" from="RangeFinder" to="." method="_on_RangeFinder_body_entered"]
 [connection signal="body_exited" from="RangeFinder" to="." method="_on_RangeFinder_body_exited"]
+[connection signal="timeout" from="ROFTimer" to="." method="_on_ROFTimer_timeout"]

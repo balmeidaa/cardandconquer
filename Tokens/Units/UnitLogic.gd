@@ -10,6 +10,13 @@ onready var states_map = {
 var current_state = null
 var states_stack = []
 
+enum STANCES {
+    hold_fire,
+    defensive,    
+    aggresive
+   }
+
+var current_stance = null
 
 func _ready():
 
@@ -40,15 +47,16 @@ func _change_state(next_state):
         states_stack[0] = new_state
 
     # additional logic for other elements
-    match next_state:
+    match current_stance:
         "aggresive":
            pass
         "defensive":
             pass
         "holdfire":
             pass
-        "attack":
-            pass
+        _:
+            current_stance = "defensive"
+
     
     current_state = states_stack[0]
     if next_state != "previous":

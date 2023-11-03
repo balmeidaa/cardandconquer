@@ -1,0 +1,125 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Assets/ShaderScripts/GlowShader.gdshader" type="Shader" id=1]
+[ext_resource path="res://Assets/SpritesVFX/scorch_01.png" type="Texture" id=2]
+[ext_resource path="res://Assets/SpritesVFX/smoke_02.png" type="Texture" id=3]
+[ext_resource path="res://Assets/resources/Fire.tres" type="Texture" id=4]
+[ext_resource path="res://Assets/resources/smoke_gradient.tres" type="Gradient" id=5]
+[ext_resource path="res://VFX/ExplosionVFXScript.gd" type="Script" id=6]
+
+[sub_resource type="Animation" id=1]
+resource_name = "SmokeAnim"
+tracks/0/type = "value"
+tracks/0/path = NodePath("SmokeParticles:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.2 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("SmokeParticles:one_shot")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1.8025 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "appear"
+}, {
+"args": [  ],
+"method": "remove"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("SmokeParticles:amount")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.2, 0.8 ),
+"transitions": PoolRealArray( 1, 0.554785 ),
+"update": 1,
+"values": [ 20, 5 ]
+}
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 1 )
+shader_param/gradient = ExtResource( 4 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = ExtResource( 5 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = ExtResource( 5 )
+
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0.0430108, 0.33957 ), 0.0, 0.0, 0, 0, Vector2( 0.994624, 0.63957 ), -1.39251, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+width = 2047
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=7]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 2.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+radial_accel = 7.62
+radial_accel_random = 0.82
+tangential_accel = 47.62
+tangential_accel_random = 1.0
+angle = 180.0
+angle_random = 0.98
+scale_curve = SubResource( 6 )
+color = Color( 1, 0.980392, 0.980392, 1 )
+color_ramp = SubResource( 4 )
+color_initial_ramp = SubResource( 3 )
+
+[node name="ExplosionVFX" type="Node2D"]
+script = ExtResource( 6 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+reset_on_save = false
+anims/SmokeAnim = SubResource( 1 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Explosion" type="Sprite" parent="."]
+material = SubResource( 2 )
+scale = Vector2( 0.7, 0.7 )
+texture = ExtResource( 2 )
+
+[node name="SmokeParticles" type="Particles2D" parent="."]
+emitting = false
+amount = 20
+lifetime = 4.0
+one_shot = true
+explosiveness = 0.48
+randomness = 0.04
+local_coords = false
+draw_order = 1
+process_material = SubResource( 7 )
+texture = ExtResource( 3 )

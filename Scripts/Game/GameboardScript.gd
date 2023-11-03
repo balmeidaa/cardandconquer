@@ -5,6 +5,7 @@ extends Node2D
 
 onready var debugger = $Camera2D/UICanvasLayer/Debugger
 onready var unit := $UnitToken
+onready var structy := $StructureTemplate
 var clic_pos
 #Controls Hand, discard pile, hexagonal grid.
 func _on_Timer_timeout():
@@ -20,8 +21,7 @@ func _ready():
 #    grid.set_up_grid(Vector2(5,5))
 #    add_child(grid)
     debugger.add_property(self, "clic_pos", "")
-    debugger.add_property(unit, "angle", "")
-    debugger.add_property(unit, "position", "")
+ 
 
 
 

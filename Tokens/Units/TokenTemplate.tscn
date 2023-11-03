@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Tokens/Units/TokenScript.gd" type="Script" id=1]
 [ext_resource path="res://Tokens/TokenImage/battle-tank.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Tokens/Units/Attack.gd" type="Script" id=5]
 [ext_resource path="res://Tokens/Units/UnitLogic.gd" type="Script" id=6]
 [ext_resource path="res://VFX/ShotVFX.tscn" type="PackedScene" id=7]
+[ext_resource path="res://VFX/ExplosionVFX.tscn" type="PackedScene" id=8]
 
 [sub_resource type="StreamTexture" id=1]
 flags = 4
@@ -19,13 +20,16 @@ radius = 207.022
 collision_layer = 2
 collision_mask = 10
 script = ExtResource( 1 )
+explosion_vfx = ExtResource( 8 )
 
 [node name="FireRay" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 200, 0 )
-collision_mask = 2
+collision_mask = 14
+collide_with_areas = true
 
 [node name="ShotVFX" parent="." instance=ExtResource( 7 )]
+position = Vector2( 55, 0 )
 
 [node name="PathPoints" type="Line2D" parent="."]
 z_index = 70
@@ -35,7 +39,6 @@ joint_mode = 1
 
 [node name="HurtBox" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( 0, -77, 69, -39, 70, 38, 0, 77, -69, 39, -70, -38 )
-disabled = true
 
 [node name="HexagonalBG" type="Sprite" parent="."]
 z_index = 50
@@ -51,6 +54,7 @@ path_desired_distance = 5.0
 target_desired_distance = 5.0
 path_max_distance = 10.0
 avoidance_enabled = true
+radius = 52.01
 
 [node name="RangeFinder" type="Area2D" parent="."]
 collision_layer = 0
@@ -74,8 +78,13 @@ script = ExtResource( 4 )
 script = ExtResource( 5 )
 
 [node name="ROFTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AimTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="target_reached" from="NavigationAgent" to="." method="_on_NavigationAgent_target_reached"]
 [connection signal="body_entered" from="RangeFinder" to="." method="_on_RangeFinder_body_entered"]
 [connection signal="body_exited" from="RangeFinder" to="." method="_on_RangeFinder_body_exited"]
 [connection signal="timeout" from="ROFTimer" to="." method="_on_ROFTimer_timeout"]
+[connection signal="timeout" from="AimTimer" to="." method="_on_AimTimer_timeout"]

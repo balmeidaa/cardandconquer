@@ -8,7 +8,7 @@ void fragment() {
 
     vec4 bg = texture(TEXTURE, UV);
     float alpha = bg.a;
-    float drw = sin(uv.x + TIME*-2.0)*0.9+2.1;
+    float drw = sin(uv.x + TIME*-10.0)*0.9+2.1;
     vec4 sample_color = texture(gradient, UV);
     if (alpha > 0.0){
         bg = (bg + sample_color);

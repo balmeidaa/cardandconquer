@@ -1,7 +1,8 @@
 [gd_resource type="DynamicFont" load_steps=2 format=2]
 
 [sub_resource type="DynamicFontData" id=1]
-font_path = "res://Fonts/Russo_One.ttf"
+override_oversampling = 50.0
+font_path = "res://Assets/Fonts/Russo_One.ttf"
 
 [resource]
 size = 20

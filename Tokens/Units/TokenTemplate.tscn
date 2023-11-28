@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Tokens/Units/TokenScript.gd" type="Script" id=1]
 [ext_resource path="res://Tokens/TokenImage/battle-tank.png" type="Texture" id=2]
@@ -8,6 +8,16 @@
 [ext_resource path="res://Tokens/Units/UnitLogic.gd" type="Script" id=6]
 [ext_resource path="res://VFX/ShotVFX.tscn" type="PackedScene" id=7]
 [ext_resource path="res://VFX/ExplosionVFX.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Assets/resources/ShinyOutline.gdshader" type="Shader" id=9]
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 9 )
+shader_param/line_color = Color( 0, 1, 0.462745, 1 )
+shader_param/line_thickness = 4.667
+shader_param/shine_speed = 1.0
+shader_param/shine_size = 0.01
+shader_param/shine_color = Color( 0.980392, 0.980392, 0.980392, 1 )
+shader_param/active = false
 
 [sub_resource type="StreamTexture" id=1]
 flags = 4
@@ -41,8 +51,12 @@ joint_mode = 1
 polygon = PoolVector2Array( 0, -77, 69, -39, 70, 38, 0, 77, -69, 39, -70, -38 )
 
 [node name="HexagonalBG" type="Sprite" parent="."]
+material = SubResource( 4 )
 z_index = 50
 texture = SubResource( 1 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
 
 [node name="UnitIcon" type="Sprite" parent="HexagonalBG"]
 position = Vector2( -2, -2 )
@@ -50,9 +64,9 @@ scale = Vector2( 0.234375, 0.234375 )
 texture = ExtResource( 2 )
 
 [node name="NavigationAgent" type="NavigationAgent2D" parent="."]
-path_desired_distance = 5.0
-target_desired_distance = 5.0
-path_max_distance = 10.0
+path_desired_distance = 90.0
+target_desired_distance = 90.0
+path_max_distance = 100.0
 avoidance_enabled = true
 radius = 52.01
 

@@ -11,11 +11,14 @@ func _update(delta):
         var direction = parent.position.direction_to(parent.nav_agent.get_next_location())
         var distance = parent.position.distance_to(parent.nav_agent.get_next_location())
         var speed = distance / delta 
+        # change 250 for max speed of each unit
         var velocity = direction * clamp(speed, 20, 250)
         # update visual path 
+ 
         var updated_path = parent.path_points.points
-        updated_path[0] = parent.position
-        parent.path_points.points = updated_path
+        if updated_path.size() > 0:
+            updated_path[0] = parent.position
+            parent.path_points.points = updated_path
 
         # move unit
         parent.move_and_slide(velocity)

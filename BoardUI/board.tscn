@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://CardContent/Hand.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Scripts/Game/Camera2D.gd" type="Script" id=2]
+[ext_resource path="res://Camera2D.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/Game/GameboardScript.gd" type="Script" id=3]
 [ext_resource path="res://Tokens/Units/TokenTemplate.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Util/Debugger.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Tokens/Stuctures/StructureTemplate.tscn" type="PackedScene" id=6]
 
 [sub_resource type="NavigationPolygon" id=1]
@@ -21,20 +20,7 @@ position = Vector2( 360, 232 )
 [node name="Timer" type="Timer" parent="."]
 autostart = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 45, -20 )
-current = true
-zoom = Vector2( 2.5, 2.5 )
-script = ExtResource( 2 )
-
-[node name="UICanvasLayer" type="CanvasLayer" parent="Camera2D"]
-
-[node name="Debugger" parent="Camera2D/UICanvasLayer" instance=ExtResource( 5 )]
-show_behind_parent = true
-margin_left = 4.0
-margin_top = 472.0
-margin_right = 492.0
-margin_bottom = 592.0
+[node name="Camera2D" parent="." instance=ExtResource( 2 )]
 
 [node name="UnitToken" parent="." instance=ExtResource( 4 )]
 position = Vector2( 64, 0 )

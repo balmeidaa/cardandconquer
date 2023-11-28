@@ -14,13 +14,12 @@ func _on_Timer_timeout():
     pass
     
 func _ready():
-   
     BoardEventHandler.connect("cell_clicked", self, "test_unit_move")
     
 #    var grid = grid_factory.instance()
 #    grid.set_up_grid(Vector2(5,5))
 #    add_child(grid)
-    debugger.add_property(self, "clic_pos", "")
+    debugger.add_property($Camera2D, "new_position", "")
  
 
 

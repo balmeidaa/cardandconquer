@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Assets/resources/RussoFont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Tokens/TokenImage/panzerfaust.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://CardContent/CardIcons/air_vehicle_icon.png" type="Texture" id=5]
 [ext_resource path="res://CardContent/CardIcons/infantry_icon.png" type="Texture" id=6]
 [ext_resource path="res://CardContent/CardIcons/banner_type.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Fonts/Russo_One.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://CardContent/CardTextures/card.png" type="Texture" id=9]
 
 [sub_resource type="Shader" id=3]
@@ -23,27 +24,11 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id=2]
 shader = SubResource( 3 )
 
-[sub_resource type="DynamicFontData" id=1]
-font_path = "res://Fonts/Russo_One.ttf"
-
-[sub_resource type="DynamicFont" id=5]
-size = 50
-outline_size = 2
-outline_color = Color( 0.0235294, 0, 0, 1 )
-use_mipmaps = true
-use_filter = true
-font_data = SubResource( 1 )
-
-[sub_resource type="DynamicFontData" id=6]
-font_path = "res://Fonts/Russo_One.ttf"
-
 [sub_resource type="DynamicFont" id=4]
-size = 18
-outline_size = 2
-outline_color = Color( 0.0235294, 0, 0, 1 )
+size = 35
 use_mipmaps = true
 use_filter = true
-font_data = SubResource( 6 )
+font_data = ExtResource( 8 )
 
 [node name="UnitCard" type="Node2D"]
 
@@ -67,25 +52,33 @@ margin_left = -32.0
 margin_top = -32.0
 margin_right = 29.0
 margin_bottom = 26.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 4 )
 text = "3k"
 
+[node name="Label" type="Label" parent="CostBG/Cost"]
+margin_left = 344.5
+margin_top = 162.0
+margin_right = 579.5
+margin_bottom = 312.0
+custom_fonts/font = ExtResource( 1 )
+text = "aaaaa"
+
 [node name="UnitName" type="Label" parent="."]
-margin_left = 64.0
-margin_top = 16.0
-margin_right = 257.0
-margin_bottom = 67.0
+margin_left = 41.0
+margin_top = 24.0
+margin_right = 234.0
+margin_bottom = 75.0
 custom_fonts/font = ExtResource( 1 )
 text = "Anti-Vehicle
 Squad"
 align = 1
 
 [node name="Description" type="Label" parent="."]
-margin_left = 152.0
-margin_top = 416.0
-margin_right = 378.0
-margin_bottom = 463.0
-custom_fonts/font = SubResource( 4 )
+margin_left = 134.0
+margin_top = 395.0
+margin_right = 360.0
+margin_bottom = 443.6
+custom_fonts/font = ExtResource( 1 )
 text = "Good against 
 all types of vehicles"
 

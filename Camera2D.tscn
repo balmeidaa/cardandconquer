@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/Game/Camera2D.gd" type="Script" id=1]
+[ext_resource path="res://Util/Debugger.tscn" type="PackedScene" id=2]
+
+[node name="Camera2D" type="Camera2D"]
+position = Vector2( 45, -20 )
+current = true
+zoom = Vector2( 2.5, 2.5 )
+script = ExtResource( 1 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="UICanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Debugger" parent="UICanvasLayer" instance=ExtResource( 2 )]
+show_behind_parent = true
+margin_left = 4.0
+margin_top = 472.0
+margin_right = 492.0
+margin_bottom = 592.0

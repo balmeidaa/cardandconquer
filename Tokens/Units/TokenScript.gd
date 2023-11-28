@@ -24,6 +24,8 @@ var target_location = null
 var enemy_contact = false
 var enemy_queue = []
 
+var unit_selected = false setget _set_selected
+
 var max_speed
 var max_range = 3 # this is just a factor to multiply the actual range
 var range_distance = 1.0 # the actual range
@@ -62,10 +64,11 @@ func _set_up():
  
 func _physics_process(delta):
 
-     if Input.is_action_just_pressed("rmb"):
-        var angle = position.angle_to(get_global_mouse_position())
-        rotate_aim(get_global_mouse_position())
-        aim_timer.start()
+#     if Input.is_action_just_pressed("rmb"):
+#        var angle = position.angle_to(get_global_mouse_position())
+#        rotate_aim(get_global_mouse_position())
+#        aim_timer.start()
+    pass
 
 func _input(event):
     unit_logic.current_state.handle_input(event)
@@ -89,8 +92,7 @@ func _move_to(coord:Vector2):
 
 func _add_visual_point_path(coord:Vector2):
     if  path_points.points.empty():
-            path_points.points = [position]
-            
+            path_points.points = [position]  
     path_points.add_point(coord) 
 
 func _should_attack_target():
@@ -184,6 +186,10 @@ func _is_valid_target(body):
     # if the body is recently dead but not removed yet i.e. dead animation
     return (body.has_method("_is_alive") and body._is_alive()) or not is_instance_valid(body)
 
+func _clear_path():
+    path_points.points = []
+    path_queue = []
+
 func _on_RangeFinder_body_entered(body):
     #if we found targeted enemy in range
     if body == target_enemy:
@@ -202,3 +208,8 @@ func _on_ROFTimer_timeout():
 
 func _on_AimTimer_timeout():
     _fire()
+
+func _set_selected(selected):
+    unit_selected = selected
+    if selected:
+        cell.material.set_shader_param("active", selected)

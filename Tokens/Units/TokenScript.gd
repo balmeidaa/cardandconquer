@@ -211,5 +211,4 @@ func _on_AimTimer_timeout():
 
 func _set_selected(selected):
     unit_selected = selected
-    if selected:
-        cell.material.set_shader_param("active", selected)
+    cell.material.set_shader_param("active", selected)

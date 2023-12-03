@@ -22,14 +22,4 @@ func _ready():
     debugger.add_property($Camera2D, "new_position", "")
  
 
-
-
-func _physics_process(delta):
-      if Input.is_action_just_released("rmb"):
-        clic_pos = get_global_mouse_position()
-      if Input.is_action_just_released("lmb"):
-         test_unit_move(get_global_mouse_position())
- 
-func test_unit_move(pixel_coord):
-    clic_pos = pixel_coord
  

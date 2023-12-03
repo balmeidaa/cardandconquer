@@ -26,8 +26,8 @@ void fragment() {
 	vec4 outlined_result = mix(color, line_color, outline + inline);
       
 	float shine = step(1.0 - shine_size * 0.5, 0.5 + 0.5 * sin(UV.x - UV.y + TIME * shine_speed));
-
-	outlined_result.rbg = mix(outlined_result.rgb, shine_color.rgb, (outline + inline) * shine_color.a * shine);
+    outlined_result.rbg = mix(outlined_result.rgb, shine_color.rgb, (outline + inline) * shine_color.a * shine);
+    
 	COLOR = mix(color, outlined_result, outlined_result.a);
     }
     else{

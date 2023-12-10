@@ -2,7 +2,7 @@ extends Camera2D
 
 onready var tween := $Tween
 const ease_tween_speed = 350
-const anim_time = 0.5
+const anim_time = 0.9
 var new_position = 0.0
 
 func _process(delta):
@@ -11,25 +11,25 @@ func _process(delta):
         new_position = position.y - (1 * ease_tween_speed)
         tween.interpolate_property(self, "position:y", 
             position.y, new_position, anim_time,
-            Tween.TRANS_CUBIC, Tween.EASE_OUT)
+            Tween.TRANS_CIRC, Tween.EASE_OUT)
 
     if Input.is_action_pressed("ui_down"):
         new_position = position.y + (1 * ease_tween_speed)
         tween.interpolate_property(self, "position:y", 
             position.y, new_position, anim_time,
-            Tween.TRANS_CUBIC, Tween.EASE_OUT)
+            Tween.TRANS_CIRC, Tween.EASE_OUT)
 
     if Input.is_action_pressed("ui_left"):
         new_position = position.x - (1 * ease_tween_speed)
         tween.interpolate_property(self, "position:x", 
             position.x, new_position, anim_time,
-            Tween.TRANS_CUBIC, Tween.EASE_OUT)
+            Tween.TRANS_CIRC, Tween.EASE_OUT)
 
     if Input.is_action_pressed("ui_right"):
         new_position = position.x + (1 * ease_tween_speed)
         tween.interpolate_property(self, "position:x", 
             position.x, new_position, anim_time,
-            Tween.TRANS_CUBIC, Tween.EASE_OUT)
+            Tween.TRANS_CIRC, Tween.EASE_OUT)
 
     tween.start() 
     
@@ -48,6 +48,7 @@ var group_selection = 'selection1'
 
 func _ready():
     debugger.add_property(self, "selected", "")
+    BoardEventHandler.connect("unit_info", self, "send_info")
 
 
 func _unhandled_input(event):
@@ -85,6 +86,12 @@ func _unhandled_input(event):
 
 func _order_units(event): 
     get_tree().call_group(group_selection, "_input", event)
+    
+func send_info(unit_info):
+    if selected_units.size() == 0:
+        return
+    get_tree().call_group(group_selection, "_set_enemy_target", unit_info)
+    
 
    
 func _toggle_unit_selection(is_selected):

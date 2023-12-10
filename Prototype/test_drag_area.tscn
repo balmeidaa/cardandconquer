@@ -1,14 +1,16 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://BoardUI/Camera2D.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Tokens/Units/TokenTemplate.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Prototype/test_drag_area.gd" type="Script" id=3]
 
 [sub_resource type="NavigationPolygon" id=1]
-vertices = PoolVector2Array( -594, -400, 1276, -235, 792, 104, -685, 585, 1196, 663 )
-polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 2, 4, 3 ) ]
-outlines = [ PoolVector2Array( -594, -400, -685, 585, 1196, 663, 792, 104, 1276, -235 ) ]
+vertices = PoolVector2Array( 1468, 204, 1519, 1067, -945, 941, -1031, -541, 1428, -658 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 3, 4, 0 ) ]
+outlines = [ PoolVector2Array( -1031, -541, -945, 941, 1519, 1067, 1468, 204, 1428, -658 ) ]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource( 3 )
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="."]
 navpoly = SubResource( 1 )
@@ -20,3 +22,6 @@ position = Vector2( -323, -9 )
 
 [node name="UnitToken2" parent="." instance=ExtResource( 2 )]
 position = Vector2( -322, 227 )
+
+[node name="UnitTokenEnemy" parent="." instance=ExtResource( 2 )]
+position = Vector2( 624, 153 )

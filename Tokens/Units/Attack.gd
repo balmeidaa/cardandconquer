@@ -1,9 +1,6 @@
 extends "res://Scripts/StateMachine/UnitState.gd"
 
 
-func _update(_delta):
-   pass
-
 func enter():
     return
 

@@ -4,6 +4,8 @@ class_name UnitToken
  
 export(PackedScene) var explosion_vfx
 
+onready var stop_timer := $StopTimer
+
 onready var fire_ray := $FireRay
 onready var shot_vfx := $ShotVFX
 onready var rof_timer := $ROFTimer
@@ -27,7 +29,7 @@ var enemy_queue = []
 var unit_selected = false setget _set_selected
 
 var max_speed
-var max_range = 3 # this is just a factor to multiply the actual range
+var max_range = 2 # this is just a factor to multiply the actual range
 var range_distance = 0.0 # the actual range that is calculated
 var shot_distance
 var cell_width = 1.0
@@ -57,6 +59,9 @@ func _ready():
    # debugger.add_property(self, "hit_points", "")
     debugger.add_property($UnitLogic, "current_state", "")
     debugger.add_property($UnitLogic, "current_stance", "")
+    debugger.add_property(self, "target_enemy", "")
+    debugger.add_property(self, "target_location", "")
+    debugger.add_property(self, "enemy_queue", "")
     ######
     nav_agent.set_target_location(position)
     path_points.set_as_toplevel(true)
@@ -94,18 +99,22 @@ func _input(event):
     unit_logic.current_state.handle_input(event)
 
 func _add_point_to_path(coord:Vector2):
+    unit_logic.current_state.send_signal("finished", "move")
     var last_target_position = nav_agent.get_next_location()
     nav_agent.set_target_location(coord)
     if nav_agent.is_target_reachable():
+        _clear_enemy()
         _add_visual_point_path(coord)
         path_queue.append(coord)
 
     nav_agent.set_target_location(last_target_position)
 
 func _move_to(coord:Vector2):
+    unit_logic.current_state.send_signal("finished", "move")
     var last_target_position = nav_agent.get_next_location()
     nav_agent.set_target_location(coord)
     if nav_agent.is_target_reachable():
+        _clear_enemy()
         _clear_path()
         _add_visual_point_path(coord)
         path_queue.append(coord)
@@ -140,12 +149,13 @@ func _fire():
     if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
         explosion.position = object.position
-        
     else:
-        var x = cos(deg2rad(aim_angle)) * range_distance
-        var y = sin(deg2rad(aim_angle)) * range_distance
-        explosion.position = Vector2(x, y)
-    add_child(explosion)  
+        var x = cos(aim_angle) * range_distance
+        var y = sin(aim_angle) * range_distance
+        explosion.position = to_global(Vector2(x, y))
+
+    add_child(explosion)
+    rof_timer.start()
         #check for function in object
         #check for direct fire or damage in area
         #calculate bonus/reduction damage
@@ -157,25 +167,26 @@ func _attack():
     # need function to check if can attack the actual enemy
     if enemy and can_fire:
         can_fire = false
-        rof_timer.start()
-        rotate_aim(enemy)
         aim_timer.start()
+         
             
         
 func _chase():
     if target_enemy and not in_range:
         target_location = target_enemy.position
-    elif enemy_queue[0] and not enemy_contact:
+    elif enemy_queue.size() > 0 and not enemy_contact:
          target_location =  enemy_queue[0].position
 
-func rotate_aim(enemy):
-    aim_angle = position.angle_to_point(enemy.position) + PI
-    fire_ray.rotation = aim_angle
-    
-    var x = cos(aim_angle)*shot_distance
-    var y = sin(aim_angle)*shot_distance
-    shot_vfx.rotation = aim_angle
-    shot_vfx.position = Vector2(x,y)
+func rotate_aim():
+    var enemy = _get_valid_enemy() 
+    if enemy != null:
+        aim_angle = position.angle_to_point(enemy.position) + PI
+        fire_ray.rotation = aim_angle
+        
+        var x = cos(aim_angle)*shot_distance
+        var y = sin(aim_angle)*shot_distance
+        shot_vfx.rotation = aim_angle
+        shot_vfx.position = Vector2(x,y)
     
 
 func _get_valid_enemy():
@@ -187,7 +198,7 @@ func _get_valid_enemy():
     return null
 
 func _is_alive():
-    return hit_points <= 0
+    return hit_points > 0
 
 func _on_NavigationAgent_target_reached():
     var updated_path = path_points.points
@@ -202,9 +213,10 @@ func _on_RangeFinder_body_exited(body):
     # if targeted enemy died reset in_range var
     if body == target_enemy:
         in_range = false
+        return
     
     # if anyone died remove from queue
-    if index_array >= 0 and _is_valid_target(body):
+    if index_array >= 0:
         enemy_queue.remove(index_array)
 
     if enemy_queue.empty():
@@ -212,11 +224,17 @@ func _on_RangeFinder_body_exited(body):
         
 func _is_valid_target(body):
     # if the body is recently dead but not removed yet i.e. dead animation
-    return (body.has_method("_is_alive") and body._is_alive()) or not is_instance_valid(body)
+    if not is_instance_valid(body):
+        return false
+    return (body.has_method("_is_alive") and body._is_alive())
 
 func _clear_path():
     path_points.points = []
     path_queue = []
+    nav_agent.set_target_location(position)
+
+func _clear_enemy():
+    target_enemy = null
 
 func _on_RangeFinder_body_entered(body):
     #if we found targeted enemy in range
@@ -226,6 +244,7 @@ func _on_RangeFinder_body_entered(body):
 
     if body == target_enemy:
         in_range = true
+        stop_timer.start()
         return
         
     enemy_contact = true
@@ -239,6 +258,7 @@ func _on_ROFTimer_timeout():
     can_fire = true
 
 func _on_AimTimer_timeout():
+    rotate_aim()
     _fire()
 
 func _set_selected(selected):
@@ -260,7 +280,6 @@ func _set_enemy_target(enemy):
 func _on_UnitToken_input_event(_viewport, event, _shape_idx):
 
     if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
-        print(self)
         self._set_selected(true)
 
     if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
@@ -270,3 +289,7 @@ func _on_UnitToken_input_event(_viewport, event, _shape_idx):
 
 func change_stance(new_stance):
     $UnitLogic._set_stance(new_stance)
+
+
+func _on_StopTimer_timeout():
+    _clear_path()

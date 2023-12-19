@@ -10,7 +10,7 @@ onready var states_map = {
 var current_state = null
 var prev_state = null
 
-var current_stance = 'defensive' setget _set_stance
+var current_stance = 'holdfire' setget _set_stance
 
 func _ready():
     current_state = $States/Idle
@@ -22,6 +22,47 @@ func _ready():
 
 func _physics_process(delta):
     current_state._update(delta)
+      # additional logic for other elements
+    match current_stance:
+        "aggresive":
+           
+            if owner._should_attack():
+                owner._attack()
+                emit_signal("finished", "attack")
+                return     
+            if owner._should_chase():
+                 owner._chase()
+                 emit_signal("finished", "move")
+                 return
+                        
+            elif owner._should_move():
+                emit_signal("finished", "move")
+                return
+            else:
+                emit_signal("finished", "idle")
+        # attacks only enemies in range  but not chases   
+        "defensive":
+            if owner._should_attack():
+                owner._attack()
+                emit_signal("finished", "attack")
+            elif owner._should_move():
+               emit_signal("finished", "move")
+            else:
+               emit_signal("finished", "previous")
+        "holdfire":
+        # Only attacks targeted enemy and noone else
+            if owner._should_attack_target():
+                if owner.in_range:
+                    owner._attack()
+                    emit_signal("finished", "attack")                
+                else:
+                    owner._chase()
+                    emit_signal("finished", "move")
+
+            elif owner._should_move():
+                emit_signal("finished", "move")
+            else:
+                emit_signal("finished", "idle")
     
 func _change_state(next_state):
     current_state.exit()
@@ -34,45 +75,6 @@ func _change_state(next_state):
         var new_state = states_map[next_state]
         current_state = new_state
         prev_state = current_state
-
-    # additional logic for other elements
-    match current_stance:
-        "aggresive":
-            if owner._should_attack():
-                if owner._should_chase():
-                    owner._chase()
-                    emit_signal("finished", "move")
-                else:
-                    emit_signal("finished", "attack")
-                    owner._attack()
-            elif owner._should_move():
-                emit_signal("finished", "move")
-            else:
-                emit_signal("finished", "idle")
-        # attacks only enemies in range  but not chases   
-        "defensive":
-            if owner._should_attack():
-                emit_signal("finished", "attack")
-                owner._attack()
-            elif owner._should_move():
-               emit_signal("finished", "move")
-            else:
-               emit_signal("finished", "previous")
-        "holdfire":
-        # Only attacks targeted enemy and noone else
-            if owner._should_attack_target():
-                if owner.in_range:
-                    emit_signal("finished", "attack")
-                    owner._attack()
-                else:
-                    owner._chase()
-                    emit_signal("finished", "move")
-
-            elif owner._should_move():
-                emit_signal("finished", "move")
-            else:
-                emit_signal("finished", "idle")
-
 
     if next_state != "previous":
         current_state.enter()

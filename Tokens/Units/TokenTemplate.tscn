@@ -104,10 +104,15 @@ one_shot = true
 one_shot = true
 
 [node name="Debugger" parent="." instance=ExtResource( 10 )]
-margin_left = -97.0
-margin_top = -170.0
-margin_right = -57.0
-margin_bottom = -130.0
+margin_left = -161.0
+margin_top = -278.0
+margin_right = 158.0
+margin_bottom = -183.0
+mouse_filter = 1
+
+[node name="StopTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
 
 [connection signal="input_event" from="." to="." method="_on_UnitToken_input_event"]
 [connection signal="target_reached" from="NavigationAgent" to="." method="_on_NavigationAgent_target_reached"]
@@ -115,3 +120,4 @@ margin_bottom = -130.0
 [connection signal="body_exited" from="RangeFinder" to="." method="_on_RangeFinder_body_exited"]
 [connection signal="timeout" from="ROFTimer" to="." method="_on_ROFTimer_timeout"]
 [connection signal="timeout" from="AimTimer" to="." method="_on_AimTimer_timeout"]
+[connection signal="timeout" from="StopTimer" to="." method="_on_StopTimer_timeout"]

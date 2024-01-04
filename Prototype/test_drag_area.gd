@@ -25,11 +25,12 @@ func _ready():
     u2._set_up()
     ue._set_up()
     
-    u1.change_stance("aggresive")
+    u1.change_stance("defensive")
    # u1.get_node("Debugger").hide()
     u2.get_node("Debugger").hide()
     ue.get_node("Debugger").hide()
     ue.get_node("PathPoints").hide()
+    u1.get_node("PathPoints").hide()
 
 func _process(delta):
 

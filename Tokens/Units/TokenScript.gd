@@ -52,7 +52,8 @@ var AIR_GROUND = []
 const GROUND = ['infantry', 'vehicle_ground', 'structure']
 const AIR = ['vehicle_air']
 
-var s
+var angle
+
 func _ready():
     ####
     # UNIT DEBUGGER
@@ -65,8 +66,8 @@ func _ready():
 #    debugger.add_property(self, "target_location", "")
     debugger.add_property(self, "enemy_queue", "")
     debugger.add_property(self, "enemy_contact", "")
-    debugger.add_property(self, "s", "")
-    debugger.add_property(stop_timer, "time_left", "")
+    debugger.add_property(self, "angle", "")
+
     ######
     nav_agent.set_target_location(position)
     path_points.set_as_toplevel(true)
@@ -98,7 +99,7 @@ func _set_up():
   # set stats for the unit
  
 func _physics_process(delta):
-    s = stop_timer.is_stopped()
+    angle = rad2deg(aim_angle)
 
 func _input(event):
     unit_logic.current_state.handle_input(event)
@@ -157,7 +158,7 @@ func _fire():
     var explosion = explosion_vfx.instance()
     explosion.set_as_toplevel(true)
     explosion.z_index = 900
-    
+
     if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
         explosion.position = object.position
@@ -199,13 +200,14 @@ func rotate_aim():
         var y = sin(aim_angle)*shot_distance
         shot_vfx.rotation = aim_angle
         shot_vfx.position = Vector2(x,y)
+
     
 
 func _get_valid_enemy():
     # priority to attack target given by player
-    if in_range and _is_valid_target(target_enemy):
+    if  _is_valid_target(target_enemy):
         return target_enemy
-    elif enemy_contact and not enemy_queue.empty():
+    elif not enemy_queue.empty():
         return enemy_queue[0]
     return null
 
@@ -229,11 +231,11 @@ func _on_RangeFinder_body_exited(body):
     
     # if anyone died remove from queue
     #chase enemy if its the first on the Q
-    if index_array == 0 and is_instance_valid(body) and unit_logic._get_stance()=='aggresive':
+    if index_array == FIRST_ENEMY and is_instance_valid(body) and unit_logic._get_stance()=='aggresive':
         target_location = body.position
         enemy_contact = false
         return
-    elif index_array > 0:
+    else:
         enemy_queue.remove(index_array)
             
     if enemy_queue.empty():
@@ -270,9 +272,7 @@ func _on_RangeFinder_body_entered(body):
     
     if (in_range or found == FIRST_ENEMY) and unit_logic._get_stance() =='aggresive' and stop_timer.is_stopped():
         stop_timer.start()
-
-  
-        
+ 
 
 
 func _on_ROFTimer_timeout():

@@ -24,17 +24,24 @@ func _ready():
     u1._set_up()
     u2._set_up()
     ue._set_up()
+    
+    u1.change_stance("aggresive")
+   # u1.get_node("Debugger").hide()
+    u2.get_node("Debugger").hide()
+    ue.get_node("Debugger").hide()
+    ue.get_node("PathPoints").hide()
 
 func _process(delta):
+
     match(index):
         0:
             ue._add_point_to_path(Vector2(0,0))
         1:
-            ue._add_point_to_path(Vector2(500,0))
+            ue._add_point_to_path(Vector2(1000,0))
         2:
-            ue._add_point_to_path(Vector2(500,500))
+            ue._add_point_to_path(Vector2(1000,1000))
         3:
-            ue._add_point_to_path(Vector2(0,500))
+            ue._add_point_to_path(Vector2(0,1000))
         _:
             index = 0
 

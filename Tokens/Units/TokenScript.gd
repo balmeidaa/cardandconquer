@@ -1,7 +1,9 @@
 extends KinematicBody2D
 class_name UnitToken
 
- 
+const NOT_FOUND = -1
+const FIRST_ENEMY = 0 
+
 export(PackedScene) var explosion_vfx
 
 onready var stop_timer := $StopTimer
@@ -50,18 +52,21 @@ var AIR_GROUND = []
 const GROUND = ['infantry', 'vehicle_ground', 'structure']
 const AIR = ['vehicle_air']
 
-
+var s
 func _ready():
     ####
     # UNIT DEBUGGER
     ####
     debugger.dynamic_font.size = 35
    # debugger.add_property(self, "hit_points", "")
-    debugger.add_property($UnitLogic, "current_state", "")
-    debugger.add_property($UnitLogic, "current_stance", "")
-    debugger.add_property(self, "target_enemy", "")
-    debugger.add_property(self, "target_location", "")
+#    debugger.add_property($UnitLogic, "current_state", "")
+#    debugger.add_property($UnitLogic, "current_stance", "")
+#    debugger.add_property(self, "target_enemy", "")
+#    debugger.add_property(self, "target_location", "")
     debugger.add_property(self, "enemy_queue", "")
+    debugger.add_property(self, "enemy_contact", "")
+    debugger.add_property(self, "s", "")
+    debugger.add_property(stop_timer, "time_left", "")
     ######
     nav_agent.set_target_location(position)
     path_points.set_as_toplevel(true)
@@ -93,7 +98,7 @@ func _set_up():
   # set stats for the unit
  
 func _physics_process(delta):
-    pass
+    s = stop_timer.is_stopped()
 
 func _input(event):
     unit_logic.current_state.handle_input(event)
@@ -110,12 +115,12 @@ func _add_point_to_path(coord:Vector2):
     nav_agent.set_target_location(last_target_position)
 
 func _move_to(coord:Vector2):
+    _clear_path()
     unit_logic.current_state.send_signal("finished", "move")
     var last_target_position = nav_agent.get_next_location()
     nav_agent.set_target_location(coord)
     if nav_agent.is_target_reachable():
         _clear_enemy()
-        _clear_path()
         _add_visual_point_path(coord)
         path_queue.append(coord)
     else:
@@ -137,8 +142,15 @@ func _should_move():
     return true if target_location else false
 
 func _should_chase():
-    return (in_range or enemy_contact)
+    if target_enemy != null and not in_range:
+        return true
+    elif enemy_queue.size() > 0 and not enemy_contact:
+        return true
+    return false
     
+func _auto_movement():
+    _move_to(target_location)
+
 func _fire():
     # Do damage to whoever is there
     shot_vfx.play()
@@ -166,15 +178,15 @@ func _attack():
     var enemy = _get_valid_enemy() 
     # need function to check if can attack the actual enemy
     if enemy and can_fire:
+        unit_logic.current_state.send_signal("finished", "attack")
         can_fire = false
         aim_timer.start()
-         
-            
+                  
         
 func _chase():
     if target_enemy and not in_range:
         target_location = target_enemy.position
-    elif enemy_queue.size() > 0 and not enemy_contact:
+    elif enemy_queue.size() > 0 and not enemy_contact and unit_logic._get_stance()=='aggresive':
          target_location =  enemy_queue[0].position
 
 func rotate_aim():
@@ -216,9 +228,14 @@ func _on_RangeFinder_body_exited(body):
         return
     
     # if anyone died remove from queue
-    if index_array >= 0:
+    #chase enemy if its the first on the Q
+    if index_array == 0 and is_instance_valid(body) and unit_logic._get_stance()=='aggresive':
+        target_location = body.position
+        enemy_contact = false
+        return
+    elif index_array > 0:
         enemy_queue.remove(index_array)
-
+            
     if enemy_queue.empty():
         enemy_contact = false
         
@@ -237,21 +254,25 @@ func _clear_enemy():
     target_enemy = null
 
 func _on_RangeFinder_body_entered(body):
-    #if we found targeted enemy in range
-    
+    var found = NOT_FOUND
+# if we found targeted enemy in range
     if body.is_in_group(faction):
         return
 
     if body == target_enemy:
         in_range = true
+    else:  
+        enemy_contact = true
+        found = enemy_queue.find(body)
+        #if enemy is a new one
+        if found == NOT_FOUND:
+            enemy_queue.append(body)
+    
+    if (in_range or found == FIRST_ENEMY) and unit_logic._get_stance() =='aggresive' and stop_timer.is_stopped():
         stop_timer.start()
-        return
+
+  
         
-    enemy_contact = true
-    var found = enemy_queue.find(body)
-    #if enemy is a new one
-    if found == -1:
-        enemy_queue.append(body)
 
 
 func _on_ROFTimer_timeout():
@@ -292,4 +313,5 @@ func change_stance(new_stance):
 
 
 func _on_StopTimer_timeout():
+    target_location = null
     _clear_path()

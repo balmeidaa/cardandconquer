@@ -18,10 +18,10 @@ navpoly = SubResource( 1 )
 [node name="Camera2D" parent="." instance=ExtResource( 1 )]
 
 [node name="UnitToken" parent="." instance=ExtResource( 2 )]
-position = Vector2( -323, -9 )
+position = Vector2( -167, 27 )
 
 [node name="UnitToken2" parent="." instance=ExtResource( 2 )]
-position = Vector2( -322, 227 )
+position = Vector2( -655, 551 )
 
 [node name="UnitTokenEnemy" parent="." instance=ExtResource( 2 )]
 position = Vector2( 624, 153 )

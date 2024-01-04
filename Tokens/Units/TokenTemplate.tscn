@@ -111,7 +111,7 @@ margin_bottom = -183.0
 mouse_filter = 1
 
 [node name="StopTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.1
 one_shot = true
 
 [connection signal="input_event" from="." to="." method="_on_UnitToken_input_event"]

@@ -8,8 +8,9 @@ func _update(delta):
         parent.nav_agent.set_target_location(parent.path_queue[0])
         parent.path_queue.remove(0)
     elif not parent.nav_agent.is_target_reached():
-        var direction = parent.position.direction_to(parent.nav_agent.get_next_location())
-        var distance = parent.position.distance_to(parent.nav_agent.get_next_location())
+        var next_location = parent.nav_agent.get_next_location()
+        var direction = parent.position.direction_to(next_location)
+        var distance = parent.position.distance_to(next_location)
         var speed = distance / delta 
         # change 250 for max speed of each unit
         var velocity = direction * clamp(speed, 20, 250)

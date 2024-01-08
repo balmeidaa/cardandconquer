@@ -37,6 +37,7 @@ var shot_distance
 var cell_width = 1.0
 var rate_of_fire = 1 # seconds
 var hit_points = 100
+var damage = -50
 var aim_time = 0.4
 
 var aim_angle = 0.0
@@ -52,21 +53,22 @@ var AIR_GROUND = []
 const GROUND = ['infantry', 'vehicle_ground', 'structure']
 const AIR = ['vehicle_air']
 
-var angle
+
 
 func _ready():
+
     ####
     # UNIT DEBUGGER
     ####
     debugger.dynamic_font.size = 35
-   # debugger.add_property(self, "hit_points", "")
+    debugger.add_property(self, "hit_points", "")
 #    debugger.add_property($UnitLogic, "current_state", "")
 #    debugger.add_property($UnitLogic, "current_stance", "")
 #    debugger.add_property(self, "target_enemy", "")
 #    debugger.add_property(self, "target_location", "")
-    debugger.add_property(self, "enemy_queue", "")
-    debugger.add_property(self, "enemy_contact", "")
-    debugger.add_property(self, "angle", "")
+#    debugger.add_property(self, "enemy_queue", "")
+#    debugger.add_property(self, "enemy_contact", "")
+
 
     ######
     nav_agent.set_target_location(position)
@@ -99,7 +101,7 @@ func _set_up():
   # set stats for the unit
  
 func _physics_process(delta):
-    angle = rad2deg(aim_angle)
+    pass
 
 func _input(event):
     unit_logic.current_state.handle_input(event)
@@ -162,6 +164,8 @@ func _fire():
     if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
         explosion.position = object.position
+        if object.has_method("_update_hitpoints"):
+            object._update_hitpoints(damage)
     else:
         var x = cos(aim_angle) * range_distance
         var y = sin(aim_angle) * range_distance
@@ -200,8 +204,7 @@ func rotate_aim():
         var y = sin(aim_angle)*shot_distance
         shot_vfx.rotation = aim_angle
         shot_vfx.position = Vector2(x,y)
-
-    
+  
 
 func _get_valid_enemy():
     # priority to attack target given by player
@@ -274,7 +277,6 @@ func _on_RangeFinder_body_entered(body):
         stop_timer.start()
  
 
-
 func _on_ROFTimer_timeout():
     can_fire = true
 
@@ -295,23 +297,27 @@ func _set_enemy_target(enemy):
             target_enemy = enemy.unit
             target_location = target_enemy.position
             break
+  
 
-    
+func change_stance(new_stance):
+    $UnitLogic._set_stance(new_stance)
+
+func _on_StopTimer_timeout():
+    target_location = null
+    _clear_path()
+
+func _update_hitpoints(damage):
+    hit_points = hit_points + damage
+    if hit_points <= 0:
+        queue_free()
+
+
 
 func _on_UnitToken_input_event(_viewport, event, _shape_idx):
-
+# TODO only be able to select own units
     if event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
         self._set_selected(true)
 
     if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
         var unit= {"unit": self, "groups": self.get_groups()}
         BoardEventHandler.unit_info(unit)
-
-
-func change_stance(new_stance):
-    $UnitLogic._set_stance(new_stance)
-
-
-func _on_StopTimer_timeout():
-    target_location = null
-    _clear_path()

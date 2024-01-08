@@ -36,6 +36,8 @@ func _physics_process(delta):
             
             if owner._should_attack():
                 owner._attack()  
+            else:
+                current_state.send_signal("finished", "idle")
            
         # attacks only enemies in range  but not chases   
         "defensive":
@@ -43,6 +45,8 @@ func _physics_process(delta):
                 owner._attack()
             elif owner._should_move():
                owner._auto_movement()
+            else:
+                current_state.send_signal("finished", "idle")
             
         "holdfire":
         # Only attacks targeted enemy and no one else
@@ -54,6 +58,8 @@ func _physics_process(delta):
                    
             elif owner._should_move():
                 owner._auto_movement()
+            else:
+                current_state.send_signal("finished", "idle")
             
     
 func _change_state(next_state):

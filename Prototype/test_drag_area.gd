@@ -27,24 +27,24 @@ func _ready():
     
     u1.change_stance("defensive")
    # u1.get_node("Debugger").hide()
-    u2.get_node("Debugger").hide()
-    ue.get_node("Debugger").hide()
+#    u2.get_node("Debugger").hide()
+#    ue.get_node("Debugger").hide()
     ue.get_node("PathPoints").hide()
     u1.get_node("PathPoints").hide()
 
 func _process(delta):
-
-    match(index):
-        0:
-            ue._add_point_to_path(Vector2(0,0))
-        1:
-            ue._add_point_to_path(Vector2(1000,0))
-        2:
-            ue._add_point_to_path(Vector2(1000,1000))
-        3:
-            ue._add_point_to_path(Vector2(0,1000))
-        _:
-            index = 0
+    if is_instance_valid(ue):
+        match(index):
+            0:
+                ue._add_point_to_path(Vector2(0,0))
+            1:
+                ue._add_point_to_path(Vector2(1000,0))
+            2:
+                ue._add_point_to_path(Vector2(1000,1000))
+            3:
+                ue._add_point_to_path(Vector2(0,1000))
+            _:
+                index = 0
 
 
 func _on_Timer_timeout():

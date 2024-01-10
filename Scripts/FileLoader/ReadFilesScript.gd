@@ -62,7 +62,7 @@ func cast_values(type, value):
             return false
         # default string
         _:
-            return value
+            return String(value)
 
 
 func clean_array(array):

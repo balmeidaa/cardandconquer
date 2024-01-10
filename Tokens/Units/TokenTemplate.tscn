@@ -103,6 +103,10 @@ one_shot = true
 [node name="AimTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="StopTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
 [node name="Debugger" parent="." instance=ExtResource( 10 )]
 margin_left = -161.0
 margin_top = -278.0
@@ -110,9 +114,7 @@ margin_right = 158.0
 margin_bottom = -183.0
 mouse_filter = 1
 
-[node name="StopTimer" type="Timer" parent="."]
-wait_time = 0.3
-one_shot = true
+[node name="Tween" type="Tween" parent="."]
 
 [connection signal="input_event" from="." to="." method="_on_UnitToken_input_event"]
 [connection signal="target_reached" from="NavigationAgent" to="." method="_on_NavigationAgent_target_reached"]

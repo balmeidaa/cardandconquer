@@ -27,8 +27,8 @@ func _ready():
     
     u1.change_stance("defensive")
    # u1.get_node("Debugger").hide()
-#    u2.get_node("Debugger").hide()
-#    ue.get_node("Debugger").hide()
+    u2.get_node("Debugger").hide()
+    ue.get_node("Debugger").hide()
     ue.get_node("PathPoints").hide()
     u1.get_node("PathPoints").hide()
 

@@ -95,6 +95,9 @@ func send_info(unit_info):
 
    
 func _toggle_unit_selection(is_selected):
+    if not is_instance_valid(self):
+        return
+        
     for unit in selected_units:
         unit.collider._set_selected(is_selected)
         if is_selected:

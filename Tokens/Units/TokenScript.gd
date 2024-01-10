@@ -16,6 +16,7 @@ onready var nav_agent := $NavigationAgent
 onready var path_points := $PathPoints
 onready var range_finder := $RangeFinder/CollisionShape
 onready var cell := $HexagonalBG
+onready var tween := $Tween
 
 onready var unit_logic := $UnitLogic
 var path_queue : Array = []
@@ -61,13 +62,13 @@ func _ready():
     # UNIT DEBUGGER
     ####
     debugger.dynamic_font.size = 35
-    debugger.add_property(self, "hit_points", "")
-#    debugger.add_property($UnitLogic, "current_state", "")
-#    debugger.add_property($UnitLogic, "current_stance", "")
-#    debugger.add_property(self, "target_enemy", "")
-#    debugger.add_property(self, "target_location", "")
-#    debugger.add_property(self, "enemy_queue", "")
-#    debugger.add_property(self, "enemy_contact", "")
+    #debugger.add_property(self, "hit_points", "")
+    debugger.add_property($UnitLogic, "current_state", "")
+    debugger.add_property($UnitLogic, "current_stance", "")
+    debugger.add_property(self, "target_enemy", "")
+    debugger.add_property(self, "target_location", "")
+    debugger.add_property(self, "enemy_queue", "")
+    debugger.add_property(self, "enemy_contact", "")
 
 
     ######
@@ -186,17 +187,20 @@ func _attack():
         unit_logic.current_state.send_signal("finished", "attack")
         can_fire = false
         aim_timer.start()
+
                   
         
 func _chase():
     if target_enemy and not in_range:
-        target_location = target_enemy.position
+        if is_instance_valid(target_enemy):
+            target_location = target_enemy.position
     elif enemy_queue.size() > 0 and not enemy_contact and unit_logic._get_stance()=='aggresive':
-         target_location =  enemy_queue[0].position
+         if is_instance_valid(enemy_queue[0]):
+            target_location =  enemy_queue[0].position
 
 func rotate_aim():
     var enemy = _get_valid_enemy() 
-    if enemy != null:
+    if is_instance_valid(enemy):
         aim_angle = position.angle_to_point(enemy.position) + PI
         fire_ray.rotation = aim_angle
         
@@ -234,11 +238,14 @@ func _on_RangeFinder_body_exited(body):
     
     # if anyone died remove from queue
     #chase enemy if its the first on the Q
+    if body.is_queued_for_deletion() and index_array > NOT_FOUND:
+         enemy_queue.remove(index_array)
+        
     if index_array == FIRST_ENEMY and is_instance_valid(body) and unit_logic._get_stance()=='aggresive':
         target_location = body.position
         enemy_contact = false
         return
-    else:
+    elif index_array > NOT_FOUND:
         enemy_queue.remove(index_array)
             
     if enemy_queue.empty():
@@ -256,6 +263,7 @@ func _clear_path():
     nav_agent.set_target_location(position)
 
 func _clear_enemy():
+  
     target_enemy = null
 
 func _on_RangeFinder_body_entered(body):
@@ -309,7 +317,11 @@ func _on_StopTimer_timeout():
 func _update_hitpoints(damage):
     hit_points = hit_points + damage
     if hit_points <= 0:
-        queue_free()
+        can_fire = false
+        tween.interpolate_property(self, "modulate", 
+            Color(1, 1, 1, 0.9), Color(1, 1, 1, 0.01), 0.5, Tween.TRANS_LINEAR)
+        tween.start()
+        call_deferred("queue_free")
 
 
 

@@ -28,7 +28,7 @@ func _update(delta):
         emit_signal("finished", "idle")
         return
     
-    emit_signal("finished", "previous")
+    #emit_signal("finished", "previous")
 
 
 func _clear_path():

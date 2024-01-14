@@ -37,7 +37,7 @@ var range_distance = 0.0 # the actual range that is calculated
 var shot_distance
 var cell_width = 1.0
 var rate_of_fire = 1 # seconds
-var hit_points = 100
+var hit_points = 50
 var damage = -50
 var aim_time = 0.4
 
@@ -124,7 +124,6 @@ func _move_to(coord:Vector2):
     var last_target_position = nav_agent.get_next_location()
     nav_agent.set_target_location(coord)
     if nav_agent.is_target_reachable():
-        _clear_enemy()
         _add_visual_point_path(coord)
         path_queue.append(coord)
     else:
@@ -140,7 +139,11 @@ func _should_attack_target():
     
     
 func _should_attack():
-    return (is_instance_valid(target_enemy) or not enemy_queue.empty())
+    var decision = (not enemy_queue.empty() and is_instance_valid(enemy_queue[0]))  or is_instance_valid(target_enemy)
+    if decision == false:
+        target_enemy = null
+        enemy_queue = []
+    return decision
 
 func _should_move():
     return true if target_location else false
@@ -154,6 +157,7 @@ func _should_chase():
     
 func _auto_movement():
     _move_to(target_location)
+    target_location = null
 
 func _fire():
     # Do damage to whoever is there
@@ -234,6 +238,8 @@ func _on_RangeFinder_body_exited(body):
     # if targeted enemy died reset in_range var
     if body == target_enemy:
         in_range = false
+        if  body.is_queued_for_deletion():
+            target_enemy = null
         return
     
     # if anyone died remove from queue
@@ -263,7 +269,6 @@ func _clear_path():
     nav_agent.set_target_location(position)
 
 func _clear_enemy():
-  
     target_enemy = null
 
 func _on_RangeFinder_body_entered(body):
@@ -300,6 +305,13 @@ func _set_enemy_target(enemy):
     # check unit faction is different --- TODO ignore allies units
     if faction in enemy.groups:
         return
+        
+    var found = enemy_queue.find(enemy)
+    
+    if found > NOT_FOUND:
+        enemy_queue.remove(found)
+    
+    
     for type in can_attack:
         if type in enemy.groups:
             target_enemy = enemy.unit

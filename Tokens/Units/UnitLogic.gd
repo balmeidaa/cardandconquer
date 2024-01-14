@@ -41,12 +41,11 @@ func _physics_process(delta):
            
         # attacks only enemies in range  but not chases   
         "defensive":
-            if owner._should_attack():
-                owner._attack()
-            elif owner._should_move():
+            
+            if owner._should_move():
                owner._auto_movement()
-#            else:
-#                current_state.send_signal("finished", "idle")
+            elif owner._should_attack():
+                owner._attack()
             
         "holdfire":
         # Only attacks targeted enemy and no one else

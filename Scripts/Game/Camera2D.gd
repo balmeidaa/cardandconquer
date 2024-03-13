@@ -47,7 +47,7 @@ var selected = 0
 var group_selection = 'selection1'
 
 func _ready():
-    debugger.add_property(self, "selected", "")
+    debugger.add_property(self, "global_position", "")
     BoardEventHandler.connect("unit_info", self, "send_info")
 
 
@@ -99,6 +99,7 @@ func _toggle_unit_selection(is_selected):
         return
         
     for unit in selected_units:
+        #unit.collider
         unit.collider._set_selected(is_selected)
         if is_selected:
             unit.collider.add_to_group(group_selection) # change this for later other groups g1, g2 etcc

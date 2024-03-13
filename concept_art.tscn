@@ -1,0 +1,227 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Tokens/TokenImage/apc.png" type="Texture" id=1]
+[ext_resource path="res://Tokens/TokenTextures/icon_background.png" type="Texture" id=2]
+[ext_resource path="res://Tokens/TokenImage/tower-flag.png" type="Texture" id=3]
+[ext_resource path="res://Tokens/TokenImage/steyr-aug.png" type="Texture" id=4]
+[ext_resource path="res://Tokens/TokenImage/panzerfaust.png" type="Texture" id=5]
+[ext_resource path="res://Tokens/TokenImage/battle-tank.png" type="Texture" id=6]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform vec4 line_color : hint_color = vec4(1);
+uniform float line_thickness : hint_range(0, 10) = 1.0;
+uniform float shine_speed : hint_range(0.0, 10.0, 0.1) = 1.0;
+uniform float shine_size : hint_range(0.01, 1.0, 0.01) = 0.01;
+uniform vec4 shine_color : hint_color = vec4(1.0);
+uniform bool active =  true;
+
+void fragment() {
+    vec4 color = texture(TEXTURE, UV);
+    if(active){
+	vec2 size = TEXTURE_PIXEL_SIZE * line_thickness / 2.0;
+	float l = texture(TEXTURE, UV + vec2(-size.x, 0)).a;
+	float u = texture(TEXTURE, UV + vec2(0, size.y)).a;
+	float r = texture(TEXTURE, UV + vec2(size.x, 0)).a;
+	float d = texture(TEXTURE, UV + vec2(0, -size.y)).a;
+	float lu = texture(TEXTURE, UV + vec2(-size.x, size.y)).a;
+	float ru = texture(TEXTURE, UV + vec2(size.x, size.y)).a;
+	float ld = texture(TEXTURE, UV + vec2(-size.x, -size.y)).a;
+	float rd = texture(TEXTURE, UV + vec2(size.x, -size.y)).a;
+	
+	float outline = min(1.0, l+r+u+d+lu+ru+ld+rd) - color.a;
+	float inline = (1.0 - l * r * u * d * lu * ru * rd * ld) * color.a;
+	
+	vec4 outlined_result = mix(color, line_color, outline + inline);
+      
+	float shine = step(1.0 - shine_size * 0.5, 0.5 + 0.5 * sin(UV.x - UV.y + TIME * shine_speed));
+    outlined_result.rbg = mix(outlined_result.rgb, shine_color.rgb, (outline + inline) * shine_color.a * shine);
+    
+	COLOR = mix(color, outlined_result, outlined_result.a);
+    }
+    else{
+        COLOR = color;
+       }
+}
+"
+
+[sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/line_color = Color( 0, 1, 0.368627, 1 )
+shader_param/line_thickness = 4.667
+shader_param/shine_speed = 1.0
+shader_param/shine_size = 0.01
+shader_param/shine_color = Color( 0.980392, 0.980392, 0.980392, 1 )
+shader_param/active = true
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/line_color = Color( 0.0156863, 0.815686, 0.443137, 1 )
+shader_param/line_thickness = 4.667
+shader_param/shine_speed = 1.0
+shader_param/shine_size = 0.01
+shader_param/shine_color = Color( 0.980392, 0.980392, 0.980392, 1 )
+shader_param/active = true
+
+[sub_resource type="ShaderMaterial" id=4]
+resource_local_to_scene = true
+shader = SubResource( 2 )
+shader_param/line_color = Color( 1, 0, 0, 1 )
+shader_param/line_thickness = 4.667
+shader_param/shine_speed = 1.0
+shader_param/shine_size = 0.01
+shader_param/shine_color = Color( 0.980392, 0.980392, 0.980392, 1 )
+shader_param/active = true
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 1283, 745 )
+current = true
+zoom = Vector2( 2.5, 2.5 )
+
+[node name="vec_APC" type="Sprite" parent="."]
+material = SubResource( 1 )
+position = Vector2( 1374, 1115 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="vec_APC"]
+position = Vector2( -1, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 1 )
+
+[node name="inf_AA1" type="Sprite" parent="."]
+material = SubResource( 1 )
+position = Vector2( 1035, 1006 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="inf_AA1"]
+position = Vector2( 1, 3 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 5 )
+
+[node name="inf_AA" type="Sprite" parent="."]
+material = SubResource( 1 )
+position = Vector2( 1115, 804 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="inf_AA"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 5 )
+
+[node name="tank_rif" type="Sprite" parent="."]
+material = SubResource( 1 )
+position = Vector2( 531, 606 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="tank_rif"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 6 )
+
+[node name="tank_rif2" type="Sprite" parent="."]
+material = SubResource( 1 )
+position = Vector2( 723, 594 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="tank_rif2"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 1 )
+
+[node name="infant_rif2" type="Sprite" parent="."]
+material = SubResource( 1 )
+position = Vector2( 1325, 819 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="infant_rif2"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 4 )
+
+[node name="outpost" type="Sprite" parent="."]
+material = SubResource( 3 )
+position = Vector2( 1221, 999 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="outpost"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 3 )
+
+[node name="infant_rif4_enem" type="Sprite" parent="."]
+visible = false
+material = SubResource( 4 )
+position = Vector2( 1028, 888 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="infant_rif4_enem"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 4 )
+
+[node name="infant_rif5_enem" type="Sprite" parent="."]
+visible = false
+material = SubResource( 4 )
+position = Vector2( 1175, 669 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="infant_rif5_enem"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 4 )
+
+[node name="infant_rif6_enem" type="Sprite" parent="."]
+visible = false
+material = SubResource( 4 )
+position = Vector2( 806, 1041 )
+z_index = 50
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( -1, 2, 142, 150 )
+region_filter_clip = true
+
+[node name="UnitIcon" type="Sprite" parent="infant_rif6_enem"]
+position = Vector2( -2, -2 )
+scale = Vector2( 0.234375, 0.234375 )
+texture = ExtResource( 4 )

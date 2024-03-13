@@ -1,0 +1,9 @@
+unit_id,unit_name,branch_type,cost,image,description,hit_points,damage,speed,range,attack,aim_time,rate_of_fire,vs_infantry,vs_ground_vehicle,vs_air_vehicle,cargo_capacity,can_attack_ground,can_attack_air,AOE
+string,string,string,int,string,string,int,int,int,int,int,float,float,int,int,int,int,bool,bool,bool
+rifle_squad,Rifle Squad,infantry,0,steyr-aug,.,100,100,250,3,100,1,0.5,0.3,-0.9,0,0,TRUE,FALSE,FALSE
+av_squad,A.V. Squad,infantry,0,panzerfaust,.,100,100,250,5,100,1.5,0.5,0,0.5,0.5,0,TRUE,TRUE,FALSE
+apc,APC,vehicle_ground,0,apc,.,100,100,300,4,100,1.5,0.5,0.1,0.1,0.1,1,FALSE,FALSE,FALSE
+battle_tank,Battle Tank,vehicle_ground,0,battle-tank,.,100,100,200,4,100,1.5,0.5,-0.2,0.3,0,0,TRUE,FALSE,FALSE
+jet_fighter,Jet Fighter,vehicle_air,0,jet-fighter,.,100,100,100,7,100,2,0.5,0,0,0,0,TRUE,TRUE,FALSE
+b2_bomber,B2 Bomber,vehicle_air,0,stealth-bomber,.,100,100,100,7,100,2,0.5,0,0,0,0,TRUE,FALSE,TRUE
+transport_helicopter,Transport Helicopter,vehicle_air,0,helicopter,.,100,100,100,0,100,0,0.5,0,0,0,2,FALSE,FALSE,FALSE

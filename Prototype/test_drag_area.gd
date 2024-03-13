@@ -6,10 +6,16 @@ onready var u2 = $UnitToken2
 onready var ue = $UnitTokenEnemy
 
 var index = 0
+const file_loader_factory = preload("res://Scripts/FileLoader/ReadFilesScript.gd")
+var file_loader
 
 func _ready():
-    u1.faction = 'player'
-    u2.faction = 'pc'
+    file_loader = file_loader_factory.new()
+    var da = file_loader.load_file("res://unit_definition.csv")
+ 
+    print(da['rifle_squad'])
+    u1.unit_faction = 'player'
+    u2.unit_faction = 'pc'
     
     u1.unit_type = 'vehicle_ground'
     u2.unit_type = 'vehicle_ground'
@@ -18,7 +24,7 @@ func _ready():
     u2.can_attack =  ['infantry', 'vehicle_ground', 'structure']
     
 
-    ue.faction = 'pc'
+    ue.unit_faction = 'pc'
     ue.unit_type = 'vehicle_ground'
     
     u1._set_up()

@@ -39,6 +39,7 @@ config/icon="res://icon.png"
 [autoload]
 
 BoardEventHandler="*res://Scripts/Game/BoardEventHandler.gd"
+LoaderData="*res://Scripts/FileLoader/LoaderData.gd"
 
 [gui]
 

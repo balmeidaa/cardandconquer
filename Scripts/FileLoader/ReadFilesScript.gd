@@ -3,7 +3,7 @@ extends Node
 func load_unit_cards():
     var unit_cards = {}
     var file = File.new()
-    file.open("res://DataFiles/unit_card_definition.csv", File.READ)
+    file.open("res://DataFiles/unit_file_definitioninition.csv", File.READ)
     # skip the first line
     var line = file.get_csv_line(",")
     
@@ -20,7 +20,7 @@ func load_unit_cards():
     return unit_cards
 
 
-#  var file_path = "res://DataFiles/card_definition.csv"
+#  var file_path = "res://DataFiles/file_definitioninition.csv"
 func load_file(file_path):    
     var file = File.new()
     file.open(file_path, file.READ)
@@ -35,18 +35,23 @@ func load_file(file_path):
             values.append(line)
     file.close()
     
-    var card_def = []
+    var file_definition = {}
     for row in values:
         var dict = {}
+        var unit_id
         for index in row.size():
+            if index == 0:
+                unit_id =  row[index]
+                continue
+                
             var key = headers[index]
             var value = row[index]
             var type = types[index]
             dict[key] = cast_values(type, value)
-        card_def.append(dict)
-    return card_def
+        file_definition[unit_id] = dict
+    return file_definition
         
-            
+# cast string values to their actual intended value            
 func cast_values(type, value):
     if value.empty():
         return null
@@ -64,7 +69,7 @@ func cast_values(type, value):
         _:
             return String(value)
 
-
+#removes empty spaces in the csv file
 func clean_array(array):
     
     var arr_size = len(array)

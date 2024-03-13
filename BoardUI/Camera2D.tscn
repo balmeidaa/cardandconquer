@@ -4,7 +4,6 @@
 [ext_resource path="res://Util/Debugger.tscn" type="PackedScene" id=2]
 
 [node name="Camera2D" type="Camera2D"]
-position = Vector2( 45, -20 )
 current = true
 zoom = Vector2( 2.5, 2.5 )
 script = ExtResource( 1 )

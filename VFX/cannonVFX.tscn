@@ -113,7 +113,6 @@ scale = Vector2( 0.7, 0.7 )
 texture = ExtResource( 2 )
 
 [node name="SmokeParticles" type="Particles2D" parent="."]
-emitting = false
 amount = 20
 lifetime = 4.0
 one_shot = true

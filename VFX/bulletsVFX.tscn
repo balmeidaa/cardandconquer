@@ -12,3 +12,6 @@ bullet_sprite = ExtResource( 2 )
 wait_time = 0.1
 
 [node name="Camera2D" parent="." instance=ExtResource( 3 )]
+current = false
+
+[connection signal="timeout" from="ROF" to="." method="_on_ROF_timeout"]

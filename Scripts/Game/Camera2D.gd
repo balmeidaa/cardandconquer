@@ -47,7 +47,7 @@ var selected = 0
 var group_selection = 'selection1'
 
 func _ready():
-    debugger.add_property(self, "global_position", "")
+   # debugger.add_property(self, "global_position", "")
     BoardEventHandler.connect("unit_info", self, "send_info")
 
 

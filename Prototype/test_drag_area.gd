@@ -10,11 +10,14 @@ const file_loader_factory = preload("res://Scripts/FileLoader/ReadFilesScript.gd
 var file_loader
 
 func _ready():
+    BoardEventHandler.set_root(get_tree().get_root())
     file_loader = file_loader_factory.new()
     var da = file_loader.load_file("res://unit_definition.csv")
  
-    print(da['rifle_squad'])
+    #print(da['rifle_squad'])
     u1.unit_faction = 'player'
+    u1.shot_type = "bullet"
+
     u2.unit_faction = 'pc'
     
     u1.unit_type = 'vehicle_ground'
@@ -33,8 +36,8 @@ func _ready():
     
     u1.change_stance("aggresive")
    # u1.get_node("Debugger").hide()
-    u2.get_node("Debugger").hide()
-    ue.get_node("Debugger").hide()
+#    u2.get_node("Debugger").hide()
+#    ue.get_node("Debugger").hide()
     ue.get_node("PathPoints").hide()
     u1.get_node("PathPoints").hide()
 

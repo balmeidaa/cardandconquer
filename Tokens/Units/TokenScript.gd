@@ -4,6 +4,7 @@ class_name UnitToken
 const NOT_FOUND = -1
 const FIRST_ENEMY = 0 
 
+# scene for instancing new effects
 export(PackedScene) var shot_vfx
 
 onready var stop_timer := $StopTimer
@@ -30,16 +31,18 @@ var enemy_contact = false
 var enemy_queue = []
 
 var unit_selected = false setget _set_selected
-
+###### data to be set in dict
 var max_speed
 var max_range = 2 # this is just a factor to multiply the actual range
 var range_distance = 0.0 # the actual range that is calculated
 var shot_distance
 var cell_width = 1.0
-var rate_of_fire = 1 # seconds
+var rate_of_fire = 0.2 # seconds
 var hit_points = 50
 var damage = -50
 var aim_time = 0.4
+var shot_type
+#####
 
 var aim_angle = 0.0
 var can_fire = true
@@ -61,14 +64,15 @@ func _ready():
    ####
    # UNIT DEBUGGER
    ####
+   shot_type="cannon"
    debugger.dynamic_font.size = 35
-   #debugger.add_property(self, "hit_points", "")
+   debugger.add_property(self, "hit_points", "")
    debugger.add_property($UnitLogic, "current_state", "")
-   debugger.add_property($UnitLogic, "current_stance", "")
-   debugger.add_property(self, "target_enemy", "")
-   debugger.add_property(self, "target_location", "")
-   debugger.add_property(self, "enemy_queue", "")
-   debugger.add_property(self, "enemy_contact", "")
+#   debugger.add_property($UnitLogic, "current_stance", "")
+#   debugger.add_property(self, "target_enemy", "")
+#   debugger.add_property(self, "target_location", "")
+#   debugger.add_property(self, "enemy_queue", "")
+#   debugger.add_property(self, "enemy_contact", "")
 
 
    ######
@@ -95,6 +99,17 @@ func _set_up():
    muzzle_vfx.position.x = shot_distance
    
    aim_timer.set_wait_time(aim_time)
+  
+   match(shot_type):
+        "bullet":
+            shot_vfx = BoardEventHandler.bullet_vfx
+        "cannon":
+            shot_vfx =  BoardEventHandler.cannon_vfx
+        "missile":
+            pass
+        _:
+            pass
+
    # set what units can attack
    
    # Set the icon for this unit
@@ -162,26 +177,39 @@ func _auto_movement():
 func _fire():
    # Do damage to whoever is there
    muzzle_vfx.play()
-   var explosion = shot_vfx.instance()
-   explosion.set_as_toplevel(true)
-   explosion.z_index = 900
+   var shots_fire_vfx = shot_vfx.instance()
+   var x = 0.0
+   var y = 0.0
 
    if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
-        explosion.position = object.position
+        shots_fire_vfx.position = object.position
         if object.has_method("_update_hitpoints"):
             object._update_hitpoints(damage)
    else:
-        var x = cos(aim_angle) * range_distance
-        var y = sin(aim_angle) * range_distance
-        explosion.position = to_global(Vector2(x, y))
+        x = cos(aim_angle) * range_distance
+        y = sin(aim_angle) * range_distance
+   add_child(shots_fire_vfx)
+   match(shot_type):
+        "bullet":
+            shots_fire_vfx.global_position = muzzle_vfx.global_position
+            shots_fire_vfx.rotation = muzzle_vfx.rotation ### buuggg
 
-   add_child(explosion)
-   rof_timer.start()
-   #check for function in object
+            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y))
+            shots_fire_vfx._set_up(shot_distance)
+        "cannon":
+            shots_fire_vfx.position = to_global(Vector2(x, y))
+        "missile":
+            pass
+        _:
+            return
+    
+
+  
+   rof_timer.start() 
    #check for direct fire or damage in area
    #calculate bonus/reduction damage
-   #object._damage()
+ 
    
 
 func _attack():

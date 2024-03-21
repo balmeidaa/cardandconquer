@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/ShotGunFire.wav-17e507b639b345260c249160da1abc2d.sample"
+path="res://.import/burst_fire.wav-f1627843eac40274187e2293541cd09e.sample"
 
 [deps]
 
-source_file="res://Assets/Audio/ShotGunFire.wav"
-dest_files=[ "res://.import/ShotGunFire.wav-17e507b639b345260c249160da1abc2d.sample" ]
+source_file="res://Assets/Audio/burst_fire.wav"
+dest_files=[ "res://.import/burst_fire.wav-f1627843eac40274187e2293541cd09e.sample" ]
 
 [params]
 

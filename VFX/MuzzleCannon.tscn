@@ -1,16 +1,16 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://VFX/MuzzleFireScript.gd" type="Script" id=1]
-[ext_resource path="res://Assets/resources/Fire.tres" type="Texture" id=3]
-[ext_resource path="res://Assets/Audio/ShotGunFire.wav" type="AudioStream" id=4]
-[ext_resource path="res://Assets/SpritesVFX/muzzle_03.png" type="Texture" id=6]
-[ext_resource path="res://Assets/SpritesVFX/muzzle_01.png" type="Texture" id=7]
-[ext_resource path="res://Assets/SpritesVFX/muzzle_04.png" type="Texture" id=8]
-[ext_resource path="res://Assets/ShaderScripts/GlowShader.gdshader" type="Shader" id=9]
+[ext_resource path="res://Assets/ShaderScripts/GlowShader.gdshader" type="Shader" id=1]
+[ext_resource path="res://Assets/resources/Fire.tres" type="Texture" id=2]
+[ext_resource path="res://VFX/VFXScript/MuzzleFireScript.gd" type="Script" id=3]
+[ext_resource path="res://Assets/Audio/cannon.wav" type="AudioStream" id=4]
+[ext_resource path="res://Assets/SpritesVFX/muzzle_03.png" type="Texture" id=5]
+[ext_resource path="res://Assets/SpritesVFX/muzzle_01.png" type="Texture" id=6]
+[ext_resource path="res://Assets/SpritesVFX/muzzle_04.png" type="Texture" id=7]
 
 [sub_resource type="ShaderMaterial" id=2]
-shader = ExtResource( 9 )
-shader_param/gradient = ExtResource( 3 )
+shader = ExtResource( 1 )
+shader_param/gradient = ExtResource( 2 )
 
 [sub_resource type="Animation" id=3]
 resource_name = "ShotVFX"
@@ -56,11 +56,11 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ ExtResource( 6 ), ExtResource( 8 ), ExtResource( 7 ) ]
+"values": [ ExtResource( 5 ), ExtResource( 7 ), ExtResource( 6 ) ]
 }
 
 [node name="MuzzleFire" type="Node2D"]
-script = ExtResource( 1 )
+script = ExtResource( 3 )
 
 [node name="Muzzle" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.632689 )
@@ -69,7 +69,7 @@ position = Vector2( 22, 0 )
 scale = Vector2( 0.5, 0.5 )
 z_index = 99
 z_as_relative = false
-texture = ExtResource( 7 )
+texture = ExtResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Tween")
@@ -79,5 +79,5 @@ anims/ShotVFX = SubResource( 3 )
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 4 )
-pitch_scale = 0.6
+pitch_scale = 1.06
 area_mask = 0

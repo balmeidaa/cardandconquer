@@ -6,6 +6,10 @@ signal cell_clicked
 var root
 var bullet_vfx = preload("res://VFX/bulletsVFX.tscn")
 var cannon_vfx = preload("res://VFX/cannonVFX.tscn")
+
+
+var cannon_muzzle = preload("res://VFX/MuzzleCannon.tscn")
+var bullets_muzzle = preload("res://VFX/MuzzleBullets.tscn")
 #var missile_vfx = preload()
 
 func cell_clicked(pixel_coord: Vector2):

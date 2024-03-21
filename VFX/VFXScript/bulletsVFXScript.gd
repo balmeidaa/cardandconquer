@@ -1,6 +1,6 @@
 extends Node2D
 
-export var speed := 0.4
+export var speed := 0.1
 export var amount_bullets := 10
 export var dispersion_angle := 8.0
 export var dispersion_origin := 4.0

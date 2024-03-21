@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://VFX/BulletScript.gd" type="Script" id=1]
+[ext_resource path="res://VFX/VFXScript/BulletScript.gd" type="Script" id=1]
 [ext_resource path="res://Assets/SpritesVFX/muzzle_05.png" type="Texture" id=2]
 [ext_resource path="res://Assets/resources/ShotGlow.tres" type="Texture" id=3]
 [ext_resource path="res://Assets/resources/GlowShader.gdshader" type="Shader" id=4]

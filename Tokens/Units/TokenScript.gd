@@ -10,7 +10,7 @@ export(PackedScene) var shot_vfx
 onready var stop_timer := $StopTimer
 
 onready var fire_ray := $FireRay
-onready var muzzle_vfx := $MuzzleFire
+onready var muzzle_vfx = $MuzzleFire #defualt muzzle VFX
 onready var rof_timer := $ROFTimer
 onready var aim_timer := $AimTimer
 onready var nav_agent := $NavigationAgent
@@ -31,25 +31,15 @@ var enemy_contact = false
 var enemy_queue = []
 
 var unit_selected = false setget _set_selected
-###### data to be set in dict
-var max_speed
-var max_range = 2 # this is just a factor to multiply the actual range
-var range_distance = 0.0 # the actual range that is calculated
-var shot_distance
+var range_distance = 0.0 # max range used to shoot
+var shot_distance # distance between the muzzle fire effect and the unit icon
 var cell_width = 1.0
-var rate_of_fire = 0.2 # seconds
-var hit_points = 50
-var damage = -50
-var aim_time = 0.4
-var shot_type
-#####
 
 var aim_angle = 0.0
 var can_fire = true
 
 onready var debugger = $Debugger
 var unit_faction = ''
-var unit_type = ''
 var can_attack = ''
 
 # const as reference
@@ -57,6 +47,7 @@ var AIR_GROUND = []
 const GROUND = ['infantry', 'vehicle_ground', 'structure']
 const AIR = ['vehicle_air']
 
+var unit_data = {}
 
 
 func _ready():
@@ -64,9 +55,9 @@ func _ready():
    ####
    # UNIT DEBUGGER
    ####
-   shot_type="cannon"
+ 
    debugger.dynamic_font.size = 35
-   debugger.add_property(self, "hit_points", "")
+#   debugger.add_property(unit_data, "hit_points", "")
    debugger.add_property($UnitLogic, "current_state", "")
 #   debugger.add_property($UnitLogic, "current_stance", "")
 #   debugger.add_property(self, "target_enemy", "")
@@ -80,36 +71,49 @@ func _ready():
    path_points.set_as_toplevel(true)
    #_set_up()
  
-func _set_up():
+func _set_up(unit_faction, template):
    AIR_GROUND.append_array(GROUND)
    AIR_GROUND.append_array(AIR)
-   
+
+   unit_data = template.duplicate(true)
+   self.unit_faction = unit_faction
    self.add_to_group(unit_faction)
-   self.add_to_group(unit_type)
+   self.add_to_group(template['branch_type'])
  
-   
+   # load unit image
+   var img_path = "res://Tokens/TokenImage/%s.png"
+   $HexagonalBG/UnitIcon.texture = load(img_path % template['image'])
    # Cell size and background for icons should be the same size
    # Set range of attack for this unit
    cell_width = cell.texture.get_size().x
-   range_distance =  cell_width * max_range + cell_width/2 
+   range_distance =  cell_width * template['range'] + cell_width/2 
    range_finder.shape.radius = range_distance
    fire_ray.cast_to = Vector2(range_distance, 0)
-   rof_timer.set_wait_time(rate_of_fire)
+   rof_timer.set_wait_time(template['rate_of_fire'])
    shot_distance = cell_width
-   muzzle_vfx.position.x = shot_distance
-   
-   aim_timer.set_wait_time(aim_time)
   
-   match(shot_type):
+   
+   aim_timer.set_wait_time(template['aim_time'])
+
+    # sets vfx for fire effect  
+   match(unit_data['shot_type']):
         "bullet":
             shot_vfx = BoardEventHandler.bullet_vfx
+            muzzle_vfx = BoardEventHandler.bullets_muzzle.instance()
+            add_child(muzzle_vfx)
         "cannon":
             shot_vfx =  BoardEventHandler.cannon_vfx
+            muzzle_vfx = BoardEventHandler.cannon_muzzle.instance()
+            add_child(muzzle_vfx)
         "missile":
             pass
         _:
             pass
 
+   muzzle_vfx.position.y = 0
+   muzzle_vfx.position.x = shot_distance
+
+         
    # set what units can attack
    
    # Set the icon for this unit
@@ -185,15 +189,17 @@ func _fire():
         var object = fire_ray.get_collider()
         shots_fire_vfx.position = object.position
         if object.has_method("_update_hitpoints"):
-            object._update_hitpoints(damage)
+            # add  damage modifier
+            # verify if we can attack
+            object._update_hitpoints(unit_data['damage'])
    else:
         x = cos(aim_angle) * range_distance
         y = sin(aim_angle) * range_distance
    add_child(shots_fire_vfx)
-   match(shot_type):
+   match(unit_data['shot_type']):
         "bullet":
             shots_fire_vfx.global_position = muzzle_vfx.global_position
-            shots_fire_vfx.rotation = muzzle_vfx.rotation ### buuggg
+            shots_fire_vfx.rotation = muzzle_vfx.rotation  
 
             var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y))
             shots_fire_vfx._set_up(shot_distance)
@@ -251,7 +257,7 @@ func _get_valid_enemy():
    return null
 
 func _is_alive():
-   return hit_points > 0
+   return unit_data['hit_points'] > 0
 
 func _on_NavigationAgent_target_reached():
    var updated_path = path_points.points
@@ -354,8 +360,8 @@ func _on_StopTimer_timeout():
    _clear_path()
 
 func _update_hitpoints(damage):
-   hit_points = hit_points + damage
-   if hit_points <= 0:
+   unit_data['hit_points'] = unit_data['hit_points'] + damage
+   if unit_data['hit_points'] <= 0:
         can_fire = false
         tween.interpolate_property(self, "modulate", 
             Color(1, 1, 1, 0.9), Color(1, 1, 1, 0.01), 0.5, Tween.TRANS_LINEAR)

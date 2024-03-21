@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://VFX/bulletsVFXScript.gd" type="Script" id=1]
+[ext_resource path="res://VFX/VFXScript/bulletsVFXScript.gd" type="Script" id=1]
 [ext_resource path="res://VFX/BulletSprite.tscn" type="PackedScene" id=2]
 [ext_resource path="res://BoardUI/Camera2D.tscn" type="PackedScene" id=3]
 

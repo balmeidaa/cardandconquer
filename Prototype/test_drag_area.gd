@@ -14,25 +14,21 @@ func _ready():
     file_loader = file_loader_factory.new()
     var da = file_loader.load_file("res://unit_definition.csv")
  
-    #print(da['rifle_squad'])
-    u1.unit_faction = 'player'
-    u1.shot_type = "bullet"
+
 
     u2.unit_faction = 'pc'
     
-    u1.unit_type = 'vehicle_ground'
-    u2.unit_type = 'vehicle_ground'
     
     u1.can_attack =  ['infantry', 'vehicle_ground', 'structure']
     u2.can_attack =  ['infantry', 'vehicle_ground', 'structure']
     
 
     ue.unit_faction = 'pc'
-    ue.unit_type = 'vehicle_ground'
+  
     
-    u1._set_up()
-    u2._set_up()
-    ue._set_up()
+    u1._set_up('player', da['rifle_squad'])
+    u2._set_up('pc', da['rifle_squad'])
+    ue._set_up('pc', da['battle_tank'])
     
     u1.change_stance("aggresive")
    # u1.get_node("Debugger").hide()

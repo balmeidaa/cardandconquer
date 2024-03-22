@@ -1,8 +1,8 @@
 extends Node2D
 
 export var speed := 0.15
-export var amount_bullets := 4
-export var dispersion_angle := 4.0
+export var amount_bullets := 6
+export var dispersion_angle := 8.0
 export var dispersion_origin := 4.0
 export var rof_delta := 0.4
 onready var rof_timer = $ROF

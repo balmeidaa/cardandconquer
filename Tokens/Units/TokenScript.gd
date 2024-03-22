@@ -89,7 +89,7 @@ func _set_up(unit_faction, template):
    range_distance =  cell_width * template['range'] + cell_width/2 
    range_finder.shape.radius = range_distance
    fire_ray.cast_to = Vector2(range_distance, 0)
-   rof_timer.set_wait_time(template['rate_of_fire'] +2.0)
+   rof_timer.set_wait_time(template['rate_of_fire'] +1)
    shot_distance = cell_width
   
 
@@ -202,7 +202,7 @@ func _fire():
             shots_fire_vfx.global_position = muzzle_vfx.global_position
             shots_fire_vfx.rotation = muzzle_vfx.rotation  
 
-            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y)) +90.0
+            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y)) + cell_width/2
             shots_fire_vfx._set_up(shot_distance)
         "cannon":
             shots_fire_vfx.global_position = shot_pos

@@ -12,7 +12,6 @@ onready var stop_timer := $StopTimer
 onready var fire_ray := $FireRay
 onready var muzzle_vfx = $MuzzleFire #defualt muzzle VFX
 onready var rof_timer := $ROFTimer
-onready var aim_timer := $AimTimer
 onready var nav_agent := $NavigationAgent
 onready var path_points := $PathPoints
 onready var range_finder := $RangeFinder/CollisionShape
@@ -57,8 +56,9 @@ func _ready():
    ####
  
    debugger.dynamic_font.size = 35
+   debugger.add_property(self, "global_position", "")
 #   debugger.add_property(unit_data, "hit_points", "")
-   debugger.add_property($UnitLogic, "current_state", "")
+#   debugger.add_property($UnitLogic, "current_state", "")
 #   debugger.add_property($UnitLogic, "current_stance", "")
 #   debugger.add_property(self, "target_enemy", "")
 #   debugger.add_property(self, "target_location", "")
@@ -89,11 +89,9 @@ func _set_up(unit_faction, template):
    range_distance =  cell_width * template['range'] + cell_width/2 
    range_finder.shape.radius = range_distance
    fire_ray.cast_to = Vector2(range_distance, 0)
-   rof_timer.set_wait_time(template['rate_of_fire'])
+   rof_timer.set_wait_time(template['rate_of_fire'] +2.0)
    shot_distance = cell_width
   
-   
-   aim_timer.set_wait_time(template['aim_time'])
 
     # sets vfx for fire effect  
    match(unit_data['shot_type']):
@@ -184,10 +182,11 @@ func _fire():
    var shots_fire_vfx = shot_vfx.instance()
    var x = 0.0
    var y = 0.0
+   var shot_pos = Vector2.ZERO
 
    if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
-        shots_fire_vfx.position = object.position
+        shot_pos = object.position
         if object.has_method("_update_hitpoints"):
             # add  damage modifier
             # verify if we can attack
@@ -195,16 +194,19 @@ func _fire():
    else:
         x = cos(aim_angle) * range_distance
         y = sin(aim_angle) * range_distance
+        shot_pos = to_global(Vector2(x, y))
+        
    add_child(shots_fire_vfx)
    match(unit_data['shot_type']):
         "bullet":
             shots_fire_vfx.global_position = muzzle_vfx.global_position
             shots_fire_vfx.rotation = muzzle_vfx.rotation  
 
-            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y))
+            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y)) +90.0
             shots_fire_vfx._set_up(shot_distance)
         "cannon":
-            shots_fire_vfx.position = to_global(Vector2(x, y))
+            shots_fire_vfx.global_position = shot_pos
+            
         "missile":
             pass
         _:
@@ -212,7 +214,7 @@ func _fire():
     
 
   
-   rof_timer.start() 
+   
    #check for direct fire or damage in area
    #calculate bonus/reduction damage
  
@@ -224,7 +226,10 @@ func _attack():
    if enemy and can_fire:
         unit_logic.current_state.send_signal("finished", "attack")
         can_fire = false
-        aim_timer.start()
+        rotate_aim()
+        _fire()
+        rof_timer.start() 
+       
 
        
    
@@ -240,6 +245,7 @@ func rotate_aim():
    var enemy = _get_valid_enemy() 
    if is_instance_valid(enemy):
         aim_angle = position.angle_to_point(enemy.position) + PI
+       
         fire_ray.rotation = aim_angle
 
         var x = cos(aim_angle)*shot_distance
@@ -327,9 +333,6 @@ func _on_RangeFinder_body_entered(body):
 func _on_ROFTimer_timeout():
    can_fire = true
 
-func _on_AimTimer_timeout():
-   rotate_aim()
-   _fire()
 
 func _set_selected(selected):
    unit_selected = selected

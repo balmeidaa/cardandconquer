@@ -12,7 +12,7 @@ func _ready():
    
 
 func play():
-    var pitch = rng.randf_range(0.65, 0.75)
+    var pitch = rng.randf_range(0.9, 1.2)
     $Audio.pitch_scale = pitch
     $AnimationPlayer.play("ShotVFX")
     

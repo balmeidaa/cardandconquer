@@ -96,9 +96,6 @@ script = ExtResource( 5 )
 [node name="ROFTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="AimTimer" type="Timer" parent="."]
-one_shot = true
-
 [node name="StopTimer" type="Timer" parent="."]
 wait_time = 0.3
 one_shot = true
@@ -117,5 +114,4 @@ mouse_filter = 1
 [connection signal="body_entered" from="RangeFinder" to="." method="_on_RangeFinder_body_entered"]
 [connection signal="body_exited" from="RangeFinder" to="." method="_on_RangeFinder_body_exited"]
 [connection signal="timeout" from="ROFTimer" to="." method="_on_ROFTimer_timeout"]
-[connection signal="timeout" from="AimTimer" to="." method="_on_AimTimer_timeout"]
 [connection signal="timeout" from="StopTimer" to="." method="_on_StopTimer_timeout"]

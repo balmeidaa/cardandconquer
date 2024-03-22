@@ -11,7 +11,6 @@ shader_param/gradient = ExtResource( 3 )
 
 [node name="BulletSprite" type="Sprite"]
 material = SubResource( 3 )
-rotation = -3.14159
 scale = Vector2( 0.3, 0.03 )
 texture = ExtResource( 2 )
 script = ExtResource( 1 )

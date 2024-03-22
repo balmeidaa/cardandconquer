@@ -1,10 +1,10 @@
 extends Node2D
 
-export var speed := 0.1
-export var amount_bullets := 10
-export var dispersion_angle := 8.0
+export var speed := 0.15
+export var amount_bullets := 4
+export var dispersion_angle := 4.0
 export var dispersion_origin := 4.0
-export var rof_delta := 0.6
+export var rof_delta := 0.4
 onready var rof_timer = $ROF
 export(PackedScene) var bullet_sprite 
 
@@ -46,8 +46,8 @@ func _on_ROF_timeout():
         return
         
     _create_bullet()
-    if (bullet_count % 2) == 0:
-        _create_bullet()
+#    if (bullet_count % 2) == 0:
+#        _create_bullet()
         
 func _create_bullet():
     rof_timer.wait_time = _get_rng_rof()

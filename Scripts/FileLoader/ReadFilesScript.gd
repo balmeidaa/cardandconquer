@@ -8,7 +8,7 @@ func load_unit_cards():
     var line = file.get_csv_line(",")
     
     while file.eof_reached() == false:
-        line = clean_array(file.get_csv_line(","))
+        line = (file.get_csv_line(",")) #clean_array
         var cards = []
         for index in range(1, line.size()):
             cards.append(line[index])
@@ -47,6 +47,7 @@ func load_file(file_path):
             var key = headers[index]
             var value = row[index]
             var type = types[index]
+
             dict[key] = cast_values(type, value)
         file_definition[unit_id] = dict
     return file_definition

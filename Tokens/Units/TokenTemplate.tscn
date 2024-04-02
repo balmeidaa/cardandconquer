@@ -23,6 +23,7 @@ shader_param/shine_color = Color( 0.980392, 0.980392, 0.980392, 1 )
 shader_param/active = false
 
 [sub_resource type="CircleShape2D" id=2]
+resource_local_to_scene = true
 radius = 207.022
 
 [node name="UnitToken" type="KinematicBody2D"]
@@ -37,7 +38,6 @@ shot_vfx = ExtResource( 8 )
 enabled = true
 cast_to = Vector2( 200, 0 )
 collision_mask = 14
-collide_with_areas = true
 
 [node name="MuzzleFire" parent="." instance=ExtResource( 7 )]
 position = Vector2( 55, 0 )
@@ -75,6 +75,7 @@ radius = 52.01
 [node name="RangeFinder" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 2
+input_pickable = false
 
 [node name="CollisionShape" type="CollisionShape2D" parent="RangeFinder"]
 shape = SubResource( 2 )

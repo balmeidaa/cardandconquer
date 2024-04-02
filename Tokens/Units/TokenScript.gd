@@ -50,7 +50,8 @@ var unit_data = {}
 
 
 func _ready():
-
+   AIR_GROUND.append_array(GROUND)
+   AIR_GROUND.append_array(AIR)
    ####
    # UNIT DEBUGGER
    ####
@@ -60,10 +61,10 @@ func _ready():
 #   debugger.add_property(unit_data, "hit_points", "")
 #   debugger.add_property($UnitLogic, "current_state", "")
 #   debugger.add_property($UnitLogic, "current_stance", "")
-#   debugger.add_property(self, "target_enemy", "")
-#   debugger.add_property(self, "target_location", "")
-#   debugger.add_property(self, "enemy_queue", "")
-#   debugger.add_property(self, "enemy_contact", "")
+   debugger.add_property(self, "range_distance", "")
+   debugger.add_property(self, "target_location", "")
+   debugger.add_property(self, "enemy_queue", "")
+   debugger.add_property(self, "enemy_contact", "")
 
 
    ######
@@ -72,8 +73,7 @@ func _ready():
    #_set_up()
  
 func _set_up(unit_faction, template):
-   AIR_GROUND.append_array(GROUND)
-   AIR_GROUND.append_array(AIR)
+
 
    unit_data = template.duplicate(true)
    self.unit_faction = unit_faction
@@ -86,9 +86,11 @@ func _set_up(unit_faction, template):
    # Cell size and background for icons should be the same size
    # Set range of attack for this unit
    cell_width = cell.texture.get_size().x
-   range_distance =  cell_width * template['range'] + cell_width/2 
+   range_distance =  cell_width * unit_data['range'] + cell_width/2 
    range_finder.shape.radius = range_distance
+
    fire_ray.cast_to = Vector2(range_distance, 0)
+
    rof_timer.set_wait_time(template['rate_of_fire'] +1)
    shot_distance = cell_width
   
@@ -183,14 +185,20 @@ func _fire():
    var x = 0.0
    var y = 0.0
    var shot_pos = Vector2.ZERO
-
+   print(range_distance,'--',range_finder.shape.radius)
    if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
         shot_pos = object.position
         if object.has_method("_update_hitpoints"):
             # add  damage modifier
             # verify if we can attack
-            object._update_hitpoints(unit_data['damage'])
+            var enemy_type = object._get_type()
+           
+            var bonus_key = 'vs_'+ enemy_type
+            var bonus_damage = unit_data[bonus_key]
+            var total_damage = unit_data['damage'] +  (unit_data['damage'] * bonus_damage)
+
+            object._update_hitpoints(total_damage)
    else:
         x = cos(aim_angle) * range_distance
         y = sin(aim_angle) * range_distance
@@ -381,3 +389,22 @@ func _on_UnitToken_input_event(_viewport, event, _shape_idx):
    if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
         var unit= {"unit": self, "groups": self.get_groups()}
         BoardEventHandler.unit_info(unit)
+
+func _get_type():
+    return unit_data['branch_type']
+
+func _can_attack_unit(body):
+    var type = ''
+    if not body.has_method('_get_type'):
+        print('no type defined in unit')
+        return false
+    type = body._get_type()
+    
+    if type in GROUND and unit_data['can_attack_ground']:
+        return true
+    elif type in GROUND and unit_data['can_attack_air']:
+        return true
+    
+    return false
+    
+ 

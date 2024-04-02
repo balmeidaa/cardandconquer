@@ -1,6 +1,5 @@
 extends Node2D
-
-
+ 
 onready var u1 = $UnitToken
 onready var u2 = $UnitToken2
 onready var ue = $UnitTokenEnemy
@@ -13,29 +12,18 @@ func _ready():
     BoardEventHandler.set_root(get_tree().get_root())
     file_loader = file_loader_factory.new()
     var da = file_loader.load_file("res://unit_definition.csv")
- 
-
-
-    u2.unit_faction = 'pc'
-    
-    
-    u1.can_attack =  ['infantry', 'vehicle_ground', 'structure']
-    u2.can_attack =  ['infantry', 'vehicle_ground', 'structure']
-    
-
-    ue.unit_faction = 'pc'
-  
     
     u1._set_up('player', da['rifle_squad'])
-    u2._set_up('pc', da['rifle_squad'])
-    ue._set_up('pc', da['battle_tank'])
+    u2._set_up('pc', da['av_squad'])
+    ue._set_up('pc', da['jet_fighter']) 
     
     u1.change_stance("aggresive")
    # u1.get_node("Debugger").hide()
-#    u2.get_node("Debugger").hide()
-#    ue.get_node("Debugger").hide()
+    u2.get_node("Debugger").hide()
+    ue.get_node("Debugger").hide()
     ue.get_node("PathPoints").hide()
     u1.get_node("PathPoints").hide()
+     
 
 #func _process(delta):
 #    if is_instance_valid(ue):

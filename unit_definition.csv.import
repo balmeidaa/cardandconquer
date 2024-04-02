@@ -1,3 +1,13 @@
 [remap]
 
-importer="keep"
+importer="csv_translation"
+type="Translation"
+valid=false
+
+[deps]
+
+source_file="res://unit_definition.csv"
+[params]
+
+compress=true
+delimiter=0

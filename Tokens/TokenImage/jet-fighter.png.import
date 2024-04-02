@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/jet_fighter.png-200d2c575768b68b04bd2605c87277e5.stex"
+path="res://.import/jet-fighter.png-3879873996ec14daba6a563121ab31a0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Tokens/TokenImage/jet_fighter.png"
-dest_files=[ "res://.import/jet_fighter.png-200d2c575768b68b04bd2605c87277e5.stex" ]
+source_file="res://Tokens/TokenImage/jet-fighter.png"
+dest_files=[ "res://.import/jet-fighter.png-3879873996ec14daba6a563121ab31a0.stex" ]
 
 [params]
 

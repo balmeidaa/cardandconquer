@@ -19,10 +19,10 @@ navpoly = SubResource( 1 )
 position = Vector2( 372, 211 )
 
 [node name="UnitToken" parent="." instance=ExtResource( 2 )]
-position = Vector2( 52, -144 )
+position = Vector2( -133, 166 )
 
 [node name="UnitToken2" parent="." instance=ExtResource( 2 )]
-position = Vector2( -512, 396 )
+position = Vector2( -1212, 983 )
 
 [node name="UnitTokenEnemy" parent="." instance=ExtResource( 2 )]
 position = Vector2( 624, 153 )

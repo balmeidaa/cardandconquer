@@ -1,9 +1,9 @@
-unit_id,unit_name,branch_type,cost,image,description,hit_points,damage,speed,range,attack,aim_time,rate_of_fire,vs_infantry,vs_ground_vehicle,vs_air_vehicle,cargo_capacity,can_attack_ground,can_attack_air,shot_type
-string,string,string,int,string,string,int,int,int,int,int,float,float,int,int,int,int,bool,bool,string
-rifle_squad,Rifle Squad,infantry,0,steyr-aug,.,100,100,250,3,100,1,0.5,0.3,-0.9,0,0,TRUE,FALSE,bullet
-av_squad,A.V. Squad,infantry,0,panzerfaust,.,100,100,250,5,100,1.5,0.5,0,0.5,0.5,0,TRUE,TRUE,missile
-apc,APC,vehicle_ground,0,apc,.,100,100,300,4,100,1.5,1.5,0.1,0.1,0.1,1,FALSE,FALSE,cannon
-battle_tank,Battle Tank,vehicle_ground,0,battle-tank,.,100,100,200,4,100,1.5,0.5,-0.2,0.3,0,0,TRUE,FALSE,cannon
-jet_fighter,Jet Fighter,vehicle_air,0,jet-fighter,.,100,100,100,7,100,2,0.5,0,0,0,0,TRUE,TRUE,missile
-b2_bomber,B2 Bomber,vehicle_air,0,stealth-bomber,.,100,100,100,7,100,2,0.5,0,0,0,0,TRUE,FALSE,bomb
-transport_helicopter,Transport Helicopter,vehicle_air,0,helicopter,.,100,100,100,0,100,0,0.5,0,0,0,2,FALSE,FALSE,
+unit_id,unit_name,branch_type,cost,image,description,hit_points,damage,speed,range,attack,rate_of_fire,vs_infantry,vs_vehicle_ground,vs_vehicle_air,cargo_capacity,can_attack_ground,can_attack_air,shot_type
+string,string,string,int,string,string,int,int,int,int,int,float,float,float,float,int,bool,bool,string
+rifle_squad,Rifle Squad,infantry,0,steyr-aug,.,100,100,250,3,100,2.5,0.3,-0.9,0,0,TRUE,FALSE,bullet
+av_squad,A.V. Squad,infantry,0,panzerfaust,.,100,100,250,5,100,2,0,0.5,0.5,0,TRUE,TRUE,missile
+apc,APC,vehicle_ground,0,apc,.,100,100,300,4,100,2.5,0.1,0.1,0.1,1,FALSE,FALSE,cannon
+battle_tank,Battle Tank,vehicle_ground,0,battle-tank,.,100,100,200,4,100,2.5,-0.2,0.3,0,0,TRUE,FALSE,cannon
+jet_fighter,Jet Fighter,vehicle_air,0,jet-fighter,.,100,100,100,7,100,1,0,0,0,0,TRUE,TRUE,missile
+b2_bomber,B2 Bomber,vehicle_air,0,stealth-bomber,.,100,100,100,7,100,1,0,0,0,0,TRUE,FALSE,bomb
+transport_helicopter,Transport Helicopter,vehicle_air,0,helicopter,.,100,100,100,0,100,1,0,0,0,2,FALSE,FALSE,

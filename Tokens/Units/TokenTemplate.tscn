@@ -37,7 +37,7 @@ shot_vfx = ExtResource( 8 )
 [node name="FireRay" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 200, 0 )
-collision_mask = 14
+collision_mask = 6
 
 [node name="MuzzleFire" parent="." instance=ExtResource( 7 )]
 position = Vector2( 55, 0 )

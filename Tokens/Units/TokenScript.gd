@@ -46,9 +46,12 @@ var AIR_GROUND = []
 const GROUND = ['infantry', 'vehicle_ground', 'structure']
 const AIR = ['vehicle_air']
 
-var unit_data = {}
+var unit_data = {'hit_points':0}
 
+const air_collision_layer = 4
+const ground_collision_layer = 2
 
+var hit_points = 0 #only for debug
 func _ready():
    AIR_GROUND.append_array(GROUND)
    AIR_GROUND.append_array(AIR)
@@ -57,14 +60,13 @@ func _ready():
    ####
  
    debugger.dynamic_font.size = 35
-   debugger.add_property(self, "global_position", "")
-#   debugger.add_property(unit_data, "hit_points", "")
+   debugger.add_property(self, "hit_points", "")
 #   debugger.add_property($UnitLogic, "current_state", "")
 #   debugger.add_property($UnitLogic, "current_stance", "")
-   debugger.add_property(self, "range_distance", "")
-   debugger.add_property(self, "target_location", "")
-   debugger.add_property(self, "enemy_queue", "")
-   debugger.add_property(self, "enemy_contact", "")
+#   debugger.add_property(self, "range_distance", "")
+#   debugger.add_property(self, "target_location", "")
+#   debugger.add_property(self, "enemy_queue", "")
+#   debugger.add_property(self, "enemy_contact", "")
 
 
    ######
@@ -74,7 +76,7 @@ func _ready():
  
 func _set_up(unit_faction, template):
 
-
+   hit_points = unit_data['hit_points']
    unit_data = template.duplicate(true)
    self.unit_faction = unit_faction
    self.add_to_group(unit_faction)
@@ -91,7 +93,7 @@ func _set_up(unit_faction, template):
 
    fire_ray.cast_to = Vector2(range_distance, 0)
 
-   rof_timer.set_wait_time(template['rate_of_fire'] +1)
+   rof_timer.set_wait_time(template['rate_of_fire'])
    shot_distance = cell_width
   
 
@@ -121,7 +123,7 @@ func _set_up(unit_faction, template):
   # set stats for the unit
  
 func _physics_process(delta):
-   pass
+   hit_points = unit_data['hit_points']
 
 func _input(event):
    unit_logic.current_state.handle_input(event)
@@ -185,7 +187,7 @@ func _fire():
    var x = 0.0
    var y = 0.0
    var shot_pos = Vector2.ZERO
-   print(range_distance,'--',range_finder.shape.radius)
+   
    if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
         shot_pos = object.position
@@ -193,6 +195,12 @@ func _fire():
             # add  damage modifier
             # verify if we can attack
             var enemy_type = object._get_type()
+
+            if enemy_type in GROUND and unit_data['can_attack_ground']:
+                fire_ray.set_collision_mask(ground_collision_layer)
+            elif enemy_type in AIR and unit_data['can_attack_air']:
+                fire_ray.set_collision_mask(air_collision_layer)
+
            
             var bonus_key = 'vs_'+ enemy_type
             var bonus_damage = unit_data[bonus_key]
@@ -324,6 +332,8 @@ func _on_RangeFinder_body_entered(body):
 # if we found targeted enemy in range
    if body.is_in_group(unit_faction):
         return
+   if not _can_attack_unit(body):
+        return
 
    if body == target_enemy:
         in_range = true
@@ -371,7 +381,7 @@ func _on_StopTimer_timeout():
    _clear_path()
 
 func _update_hitpoints(damage):
-   unit_data['hit_points'] = unit_data['hit_points'] + damage
+   unit_data['hit_points'] = unit_data['hit_points'] - damage
    if unit_data['hit_points'] <= 0:
         can_fire = false
         tween.interpolate_property(self, "modulate", 
@@ -391,6 +401,8 @@ func _on_UnitToken_input_event(_viewport, event, _shape_idx):
         BoardEventHandler.unit_info(unit)
 
 func _get_type():
+    if not unit_data.has('branch_type'):
+        return false
     return unit_data['branch_type']
 
 func _can_attack_unit(body):
@@ -402,7 +414,7 @@ func _can_attack_unit(body):
     
     if type in GROUND and unit_data['can_attack_ground']:
         return true
-    elif type in GROUND and unit_data['can_attack_air']:
+    elif type in AIR and unit_data['can_attack_air']:
         return true
     
     return false

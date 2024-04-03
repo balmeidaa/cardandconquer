@@ -15,12 +15,12 @@ func _ready():
     
     u1._set_up('player', da['rifle_squad'])
     u2._set_up('pc', da['av_squad'])
-    ue._set_up('pc', da['jet_fighter']) 
+    ue._set_up('pc', da['av_squad']) 
     
     u1.change_stance("aggresive")
    # u1.get_node("Debugger").hide()
-    u2.get_node("Debugger").hide()
-    ue.get_node("Debugger").hide()
+#    u2.get_node("Debugger").hide()
+#    ue.get_node("Debugger").hide()
     ue.get_node("PathPoints").hide()
     u1.get_node("PathPoints").hide()
      

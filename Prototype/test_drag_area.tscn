@@ -22,7 +22,7 @@ position = Vector2( 372, 211 )
 position = Vector2( -133, 166 )
 
 [node name="UnitToken2" parent="." instance=ExtResource( 2 )]
-position = Vector2( -1212, 983 )
+position = Vector2( -710, 805 )
 
 [node name="UnitTokenEnemy" parent="." instance=ExtResource( 2 )]
 position = Vector2( 624, 153 )

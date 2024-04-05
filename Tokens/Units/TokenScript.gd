@@ -102,16 +102,18 @@ func _set_up(unit_faction, template):
         "bullet":
             shot_vfx = BoardEventHandler.bullet_vfx
             muzzle_vfx = BoardEventHandler.bullets_muzzle.instance()
-            add_child(muzzle_vfx)
+       
         "cannon":
             shot_vfx =  BoardEventHandler.cannon_vfx
             muzzle_vfx = BoardEventHandler.cannon_muzzle.instance()
-            add_child(muzzle_vfx)
+        
         "missile":
-            pass
+            shot_vfx =  BoardEventHandler.missile_vfx
+            muzzle_vfx = BoardEventHandler.cannon_muzzle.instance()
+            
         _:
             pass
-
+   add_child(muzzle_vfx)
    muzzle_vfx.position.y = 0
    muzzle_vfx.position.x = shot_distance
 
@@ -224,7 +226,9 @@ func _fire():
             shots_fire_vfx.global_position = shot_pos
             
         "missile":
-            pass
+            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y)) - cell_width/2
+            shots_fire_vfx.create_missile(muzzle_vfx.global_position, muzzle_vfx.rotation, shot_distance)
+  
         _:
             return
     

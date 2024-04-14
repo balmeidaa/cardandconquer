@@ -30,7 +30,7 @@ func _set_up(distance: float):
     
 
 func _get_rng_rof():
-    return rng.randi_range (-rof_delta, rof_delta)
+    return rng.randi_range(-rof_delta, rof_delta)
 
 func _get_rng_angle():
     return rng.randi_range (-dispersion_angle, dispersion_angle)

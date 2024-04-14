@@ -19,6 +19,7 @@ func appear():
     Vector2(0.3, 0.3), Vector2(0.7, 0.7), 0.3, 
     Tween.TRANS_QUINT, Tween.EASE_IN)
     TweenAnimator.start() 
+    $Audio.play()
 
 
 func remove():

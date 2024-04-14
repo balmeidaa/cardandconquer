@@ -61,6 +61,7 @@ tracks/2/keys = {
 
 [node name="MuzzleFire" type="Node2D"]
 script = ExtResource( 3 )
+audio_path = "res://Assets/Audio/cannon.wav"
 
 [node name="Muzzle" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.632689 )
@@ -79,5 +80,5 @@ anims/ShotVFX = SubResource( 3 )
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 4 )
-pitch_scale = 1.06
+volume_db = -2.0
 area_mask = 0

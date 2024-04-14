@@ -110,6 +110,7 @@ func _set_up(unit_faction, template):
         "missile":
             shot_vfx =  BoardEventHandler.missile_vfx
             muzzle_vfx = BoardEventHandler.cannon_muzzle.instance()
+            muzzle_vfx.audio_path = "res://Assets/Audio/missile.wav"
             
         _:
             pass
@@ -184,7 +185,9 @@ func _auto_movement():
 
 func _fire():
    # Do damage to whoever is there
-   muzzle_vfx.play()
+   if not fire_ray.is_colliding():
+     return
+
    var shots_fire_vfx = shot_vfx.instance()
    var x = 0.0
    var y = 0.0
@@ -193,6 +196,7 @@ func _fire():
    if fire_ray.is_colliding():
         var object = fire_ray.get_collider()
         shot_pos = object.position
+        
         if object.has_method("_update_hitpoints"):
             # add  damage modifier
             # verify if we can attack
@@ -210,11 +214,13 @@ func _fire():
 
             object._update_hitpoints(total_damage)
    else:
+        
         x = cos(aim_angle) * range_distance
         y = sin(aim_angle) * range_distance
         shot_pos = to_global(Vector2(x, y))
         
    add_child(shots_fire_vfx)
+   muzzle_vfx.play()
    match(unit_data['shot_type']):
         "bullet":
             shots_fire_vfx.global_position = muzzle_vfx.global_position

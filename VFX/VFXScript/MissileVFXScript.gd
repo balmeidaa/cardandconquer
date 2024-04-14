@@ -15,6 +15,7 @@ func _ready():
     self.z_index = 900
     root = BoardEventHandler.root
 
+
 func _process(delta):
     # check if the missile traveled enough distance
     if distance == null:

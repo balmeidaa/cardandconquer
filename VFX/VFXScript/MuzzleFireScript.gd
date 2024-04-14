@@ -3,12 +3,15 @@ extends Node2D
 onready var TweenAnimator = $Tween
 onready var muzzle = $Muzzle
 
+export(String, FILE, "*.wav") var audio_path
+
 var rng = RandomNumberGenerator.new()
 
  
 func _ready():
    rng.randomize()
    muzzle.modulate = Color(1, 1, 1, 0.0)
+   $Audio.stream = load(audio_path)
    
 
 func play():

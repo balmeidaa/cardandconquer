@@ -5,7 +5,7 @@ signal cell_clicked
 
 var root
 var bullet_vfx = preload("res://VFX/bulletsVFX.tscn")
-var cannon_vfx = preload("res://VFX/cannonVFX.tscn")
+var cannon_vfx = preload("res://VFX/explosionVFX.tscn")
 var missile_vfx = preload("res://VFX/MissileVFX.tscn")
 
 var cannon_muzzle = preload("res://VFX/MuzzleCannon.tscn")

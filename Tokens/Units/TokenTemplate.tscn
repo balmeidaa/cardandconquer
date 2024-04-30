@@ -11,6 +11,7 @@
 [ext_resource path="res://Assets/resources/ShinyOutline.gdshader" type="Shader" id=9]
 [ext_resource path="res://Util/Debugger.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Tokens/TokenTextures/icon_background.png" type="Texture" id=11]
+[ext_resource path="res://Tokens/UtilToken/RangeHandler.tscn" type="PackedScene" id=12]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -22,22 +23,13 @@ shader_param/shine_size = 0.01
 shader_param/shine_color = Color( 0.980392, 0.980392, 0.980392, 1 )
 shader_param/active = false
 
-[sub_resource type="CircleShape2D" id=2]
-resource_local_to_scene = true
-radius = 207.022
-
 [node name="UnitToken" type="KinematicBody2D"]
 z_as_relative = false
 collision_layer = 2
-collision_mask = 10
+collision_mask = 2
 input_pickable = true
 script = ExtResource( 1 )
 shot_vfx = ExtResource( 8 )
-
-[node name="FireRay" type="RayCast2D" parent="."]
-enabled = true
-cast_to = Vector2( 200, 0 )
-collision_mask = 6
 
 [node name="MuzzleFire" parent="." instance=ExtResource( 7 )]
 position = Vector2( 55, 0 )
@@ -72,14 +64,6 @@ path_max_distance = 100.0
 avoidance_enabled = true
 radius = 52.01
 
-[node name="RangeFinder" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 2
-input_pickable = false
-
-[node name="CollisionShape" type="CollisionShape2D" parent="RangeFinder"]
-shape = SubResource( 2 )
-
 [node name="UnitLogic" type="Node2D" parent="."]
 script = ExtResource( 6 )
 
@@ -110,9 +94,9 @@ mouse_filter = 1
 
 [node name="Tween" type="Tween" parent="."]
 
+[node name="RangeHandler" parent="." instance=ExtResource( 12 )]
+
 [connection signal="input_event" from="." to="." method="_on_UnitToken_input_event"]
 [connection signal="target_reached" from="NavigationAgent" to="." method="_on_NavigationAgent_target_reached"]
-[connection signal="body_entered" from="RangeFinder" to="." method="_on_RangeFinder_body_entered"]
-[connection signal="body_exited" from="RangeFinder" to="." method="_on_RangeFinder_body_exited"]
 [connection signal="timeout" from="ROFTimer" to="." method="_on_ROFTimer_timeout"]
 [connection signal="timeout" from="StopTimer" to="." method="_on_StopTimer_timeout"]

@@ -9,12 +9,13 @@ export(PackedScene) var shot_vfx
 
 onready var stop_timer := $StopTimer
 
-onready var fire_ray := $FireRay
+var fire_ray = null
+
 onready var muzzle_vfx = $MuzzleFire #defualt muzzle VFX
 onready var rof_timer := $ROFTimer
 onready var nav_agent := $NavigationAgent
 onready var path_points := $PathPoints
-onready var range_finder := $RangeFinder/CollisionShape
+
 onready var cell := $HexagonalBG
 onready var tween := $Tween
 
@@ -89,9 +90,8 @@ func _set_up(unit_faction, template):
    # Set range of attack for this unit
    cell_width = cell.texture.get_size().x
    range_distance =  cell_width * unit_data['range'] + cell_width/2 
-   range_finder.shape.radius = range_distance
-
-   fire_ray.cast_to = Vector2(range_distance, 0)
+   $RangeHandler._set_up(range_distance)
+   fire_ray = $RangeHandler.fire_ray
 
    rof_timer.set_wait_time(template['rate_of_fire'])
    shot_distance = cell_width
@@ -299,7 +299,8 @@ func _on_NavigationAgent_target_reached():
    path_points.points = updated_path
 
 
-func _on_RangeFinder_body_exited(body):
+func _on_body_exited(body):
+
    var index_array = enemy_queue.find(body)
    # if targeted enemy died reset in_range var
    if body == target_enemy:
@@ -311,7 +312,7 @@ func _on_RangeFinder_body_exited(body):
    # if anyone died remove from queue
    #chase enemy if its the first on the Q
    if body.is_queued_for_deletion() and index_array > NOT_FOUND:
-    enemy_queue.remove(index_array)
+        enemy_queue.remove(index_array)
    
    if index_array == FIRST_ENEMY and is_instance_valid(body) and unit_logic._get_stance()=='aggresive':
         target_location = body.position
@@ -337,7 +338,8 @@ func _clear_path():
 func _clear_enemy():
    target_enemy = null
 
-func _on_RangeFinder_body_entered(body):
+func _on_body_entered(body):
+
    var found = NOT_FOUND
 # if we found targeted enemy in range
    if body.is_in_group(unit_faction):

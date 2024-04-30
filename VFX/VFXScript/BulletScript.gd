@@ -27,8 +27,8 @@ func _process(delta):
     
     
     
-func create_bullet(origin: Vector2, angle:float, distance: float, speed:float):
-    self.origin = origin
+func create_bullet(origin_o: Vector2, angle:float, distance: float, speed:float):
+    self.origin = origin_o
     self.global_position = origin
     self.speed = speed
     self.angle = rotation + deg2rad(angle)

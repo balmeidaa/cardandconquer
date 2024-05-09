@@ -13,7 +13,7 @@ func _ready():
     file_loader = file_loader_factory.new()
     var da = file_loader.load_file("res://unit_definition.csv")
     
-    u1._set_up('player', da['rifle_squad'])
+    u1._set_up('player', da['av_squad'])
     u2._set_up('pc', da['rifle_squad'])
     ue._set_up('pc', da['rifle_squad']) 
     

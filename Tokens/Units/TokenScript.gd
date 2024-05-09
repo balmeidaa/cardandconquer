@@ -4,14 +4,11 @@ class_name UnitToken
 const NOT_FOUND = -1
 const FIRST_ENEMY = 0 
 
-# scene for instancing new effects
-export(PackedScene) var shot_vfx
 
 onready var stop_timer := $StopTimer
 
 var fire_ray = null
 
-onready var muzzle_vfx = $MuzzleFire #defualt muzzle VFX
 onready var rof_timer := $ROFTimer
 onready var nav_agent := $NavigationAgent
 onready var path_points := $PathPoints
@@ -43,19 +40,17 @@ var unit_faction = ''
 var can_attack = ''
 
 # const as reference
-var AIR_GROUND = []
+ 
 const GROUND = ['infantry', 'vehicle_ground', 'structure']
 const AIR = ['vehicle_air']
 
 var unit_data = {'hit_points':0}
 
-const air_collision_layer = 4
-const ground_collision_layer = 2
+
 
 var hit_points = 0 #only for debug
 func _ready():
-   AIR_GROUND.append_array(GROUND)
-   AIR_GROUND.append_array(AIR)
+
    ####
    # UNIT DEBUGGER
    ####
@@ -90,40 +85,15 @@ func _set_up(unit_faction, template):
    # Set range of attack for this unit
    cell_width = cell.texture.get_size().x
    range_distance =  cell_width * unit_data['range'] + cell_width/2 
-   $RangeHandler._set_up(range_distance)
+   $RangeHandler._set_up(range_distance, cell_width, unit_data['shot_type'])
    fire_ray = $RangeHandler.fire_ray
 
    rof_timer.set_wait_time(template['rate_of_fire'])
-   shot_distance = cell_width
+   #shot_distance = cell_width
   
 
-    # sets vfx for fire effect  
-   match(unit_data['shot_type']):
-        "bullet":
-            shot_vfx = BoardEventHandler.bullet_vfx
-            muzzle_vfx = BoardEventHandler.bullets_muzzle.instance()
-       
-        "cannon":
-            shot_vfx =  BoardEventHandler.cannon_vfx
-            muzzle_vfx = BoardEventHandler.cannon_muzzle.instance()
-        
-        "missile":
-            shot_vfx =  BoardEventHandler.missile_vfx
-            muzzle_vfx = BoardEventHandler.cannon_muzzle.instance()
-            muzzle_vfx.audio_path = "res://Assets/Audio/missile.wav"
-            
-        _:
-            pass
-   add_child(muzzle_vfx)
-   muzzle_vfx.position.y = 0
-   muzzle_vfx.position.x = shot_distance
-
-         
-   # set what units can attack
-   
-   # Set the icon for this unit
-   # Set the player faction
-  # set stats for the unit
+ 
+  
  
 func _physics_process(delta):
    hit_points = unit_data['hit_points']
@@ -185,64 +155,10 @@ func _auto_movement():
 
 func _fire():
    # Do damage to whoever is there
-   if not fire_ray.is_colliding():
-     return
-
-   var shots_fire_vfx = shot_vfx.instance()
-   var x = 0.0
-   var y = 0.0
-   var shot_pos = Vector2.ZERO
-   
-   if fire_ray.is_colliding():
-        var object = fire_ray.get_collider()
-        shot_pos = object.position
-        
-        if object.has_method("_update_hitpoints"):
-            # add  damage modifier
-            # verify if we can attack
-            var enemy_type = object._get_type()
-
-            if enemy_type in GROUND and unit_data['can_attack_ground']:
-                fire_ray.set_collision_mask(ground_collision_layer)
-            elif enemy_type in AIR and unit_data['can_attack_air']:
-                fire_ray.set_collision_mask(air_collision_layer)
-
-           
-            var bonus_key = 'vs_'+ enemy_type
-            var bonus_damage = unit_data[bonus_key]
-            var total_damage = unit_data['damage'] +  (unit_data['damage'] * bonus_damage)
-
-            object._update_hitpoints(total_damage)
-   else:
-        
-        x = cos(aim_angle) * range_distance
-        y = sin(aim_angle) * range_distance
-        shot_pos = to_global(Vector2(x, y))
-        
-   add_child(shots_fire_vfx)
-   muzzle_vfx.play()
-   match(unit_data['shot_type']):
-        "bullet":
-            shots_fire_vfx.global_position = muzzle_vfx.global_position
-            shots_fire_vfx.rotation = muzzle_vfx.rotation  
-
-            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y)) + cell_width/2
-            shots_fire_vfx._set_up(shot_distance)
-        "cannon":
-            shots_fire_vfx.global_position = shot_pos
-            
-        "missile":
-            var shot_distance = shots_fire_vfx.position.distance_to(Vector2(x, y)) - cell_width/2
-            shots_fire_vfx.create_missile(muzzle_vfx.global_position, muzzle_vfx.rotation, shot_distance)
+    $RangeHandler.vfx_fire(unit_data)
   
-        _:
-            return
-    
-
   
-   
-   #check for direct fire or damage in area
-   #calculate bonus/reduction damage
+        
  
    
 
@@ -274,10 +190,10 @@ func rotate_aim():
        
         fire_ray.rotation = aim_angle
 
-        var x = cos(aim_angle)*shot_distance
-        var y = sin(aim_angle)*shot_distance
-        muzzle_vfx.rotation = aim_angle
-        muzzle_vfx.position = Vector2(x,y)
+        var x = cos(aim_angle)
+        var y = sin(aim_angle)
+        $RangeHandler.rotate_vfx(aim_angle, Vector2(x,y))
+
    
 
 func _get_valid_enemy():
